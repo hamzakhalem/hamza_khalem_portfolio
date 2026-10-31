@@ -1,28 +1,62 @@
-# Hamza Khalem — Developer Portfolio
+# Hamza Khalem | Software Engineer
 
-A responsive portfolio built with React, Vite, and TypeScript.
+Modern, responsive developer portfolio built with React, Vite, and TypeScript.
 
-## Features
-- Three focus areas: Software Engineering, AI, and LMS
-- Interactive terminal
-- Animated project cards and category filters
-- GitHub repository integration and contribution calendar
-- English, French, and Arabic interface with RTL layout for Arabic
-- Dark and light themes; selected language and theme are saved in localStorage
-- Main call-to-action buttons open the LinkedIn profile: https://www.linkedin.com/in/hamza-khalem-436b29201
-- Responsive desktop and mobile layouts
+## About Me
 
-## Run locally
+I'm a Software Engineer specializing in scalable web applications, AI-powered solutions, and Learning Management Systems (LMS).
+
+I have experience developing and customizing enterprise-scale platforms, building RESTful APIs, and integrating AI capabilities into existing systems.
+
+## Areas of Expertise
+
+- **Software Engineering:** Python, Django, React, TypeScript, JavaScript, PHP.
+- **Artificial Intelligence:** AI integrations, Deep Learning, Speech Recognition, OpenAI API.
+- **Learning Management Systems:** Moodle Development, Plugin Development, Core Customization, LMS Integrations.
+
+## Tech Stack
+
+- React
+- Vite
+- TypeScript
+- CSS3
+- JavaScript
+- Git & GitHub
+
+## Getting Started
+
+Clone the repository:
+
+```bash
+git clone https://github.com/hamzakhalem/hamza-khalem-portfolio.git
+cd hamza-khalem-portfolio
+```
+
+Install dependencies:
 
 ```bash
 npm install
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-To verify a production build:
+Build for production:
 
 ```bash
 npm run build
 ```
 
-GitHub repository cards use the public GitHub API. The contribution calendar uses a third-party chart endpoint, so both features require an internet connection.
+## Contact
+
+- **LinkedIn:** https://linkedin.com/in/hamza-khalem-436b29201
+- **GitHub:** https://github.com/hamzakhalem
+- **LeetCode:** https://leetcode.com/u/hamzakhalem97
+- **Medium:** https://medium.com/@hoh_112/
+
+## License
+
+This project is personal portfolio software. All rights reserved.
