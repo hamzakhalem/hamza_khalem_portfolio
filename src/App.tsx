@@ -3,6 +3,8 @@ import { ArrowDownRight, ArrowUpRight, BookOpen, ChevronRight, Code2, Command, D
 
 type Area = 'software' | 'ai' | 'lms'
 type Project = { title: string; category: Area; eyebrow: string; description: string; stack: string[]; outcome: string }
+type GitHubRepo = { name: string; description: string | null; html_url: string; stargazers_count: number; language: string | null; fork: boolean; pushed_at: string }
+type ContributionDay = { date: string; count: number; level: number }
 
 const projects: Project[] = [
   { title: 'Medad / TVTC Learning Platform', category: 'lms', eyebrow: 'LARGE-SCALE LMS', description: 'Engineering and extending a Moodle-based learning environment for educational institutions, from assessment workflows to platform integrations.', stack: ['Moodle', 'PHP 8.1', 'PostgreSQL', 'Docker'], outcome: 'Reported scale: 300k users · 25k concurrent users' },
@@ -31,6 +33,9 @@ const translations: Record<Lang, Record<string, string>> = {
   en: {},
   fr: {
     'Download CV':'Télécharger le CV',
+    'Pushed':'Dernier push :',
+    'contributions in the past year':'contributions cette année',
+    'Contribution data could not be loaded.':'Les contributions n’ont pas pu être chargées.',
     'Software Engineering':'Ingénierie logicielle','Artificial Intelligence':'Intelligence artificielle','Learning Systems':'Systèmes d’apprentissage','Expertise':'Expertise','Projects':'Projets','About':'À propos','Terminal':'Terminal','Let’s talk':'Parlons-en','OPEN TO THE RIGHT OPPORTUNITY':'À L’ÉCOUTE DE LA BONNE OPPORTUNITÉ','ENGINEERING DIGITAL EXPERIENCES':'CONCEVOIR DES EXPÉRIENCES NUMÉRIQUES',
     "I'm Hamza Khalem, a Software Engineer working across backend platforms, AI-powered products, and learning systems.":'Je suis Hamza Khalem, ingénieur logiciel travaillant sur des plateformes backend, des produits intégrant l’IA et des systèmes d’apprentissage.','Backend & APIs':'Backend et API','Platform engineering':'Ingénierie de plateforme','Integrations':'Intégrations','AI integrations':'Intégrations IA','AI for education':'IA pour l’éducation','Product workflows':'Processus produit','EdTech':'EdTech','Learning platforms':'Plateformes d’apprentissage','SCROLL TO EXPLORE':'DÉFILER POUR EXPLORER','SYSTEMS / ENGINEERING':'SYSTÈMES / INGÉNIERIE','INTELLIGENCE / AI':'INTELLIGENCE / IA','LEARNING / LMS':'APPRENTISSAGE / LMS','I build systems':'Je crée des systèmes','that':'qui','make':'font','a difference.':'la différence.','View LinkedIn profile':'Voir le profil LinkedIn','Connect on LinkedIn':'Me contacter sur LinkedIn','FOCUS AREAS':'DOMAINES','YEARS BUILDING':'ANS D’EXPÉRIENCE','LMS USERS REPORTED':'UTILISATEURS LMS ESTIMÉS',
     'A FEW WAYS I CAN HELP':'COMMENT JE PEUX AIDER','Choose your':'Choisissez votre','entry point.':'point d’entrée.','Three areas. One engineering mindset.':'Trois domaines. Une même approche d’ingénierie.','Explore what matters to you.':'Explorez ce qui vous intéresse.','EXPLORE AREA':'EXPLORER CE DOMAINE',
@@ -46,6 +51,9 @@ const translations: Record<Lang, Record<string, string>> = {
   },
   ar: {
     'Download CV':'تحميل السيرة الذاتية',
+    'Pushed':'آخر تحديث:',
+    'contributions in the past year':'مساهمة خلال السنة الماضية',
+    'Contribution data could not be loaded.':'تعذّر تحميل بيانات المساهمات.',
     'Software Engineering':'هندسة البرمجيات','Artificial Intelligence':'الذكاء الاصطناعي','Learning Systems':'أنظمة التعلم','Expertise':'مجالات الخبرة','Projects':'المشاريع','About':'نبذة عني','Terminal':'الطرفية','Let’s talk':'لنتحدث','OPEN TO THE RIGHT OPPORTUNITY':'منفتح على الفرص المناسبة','ENGINEERING DIGITAL EXPERIENCES':'هندسة التجارب الرقمية',
     "I'm Hamza Khalem, a Software Engineer working across backend platforms, AI-powered products, and learning systems.":'أنا حمزة خالم، مهندس برمجيات أعمل على الأنظمة الخلفية والمنتجات المدعومة بالذكاء الاصطناعي ومنصات التعلم.','Backend & APIs':'الأنظمة الخلفية وواجهات API','Platform engineering':'هندسة المنصات','Integrations':'التكاملات','AI integrations':'تكاملات الذكاء الاصطناعي','AI for education':'الذكاء الاصطناعي في التعليم','Product workflows':'مسارات المنتج','EdTech':'تقنيات التعليم','Learning platforms':'منصات التعلم','SCROLL TO EXPLORE':'مرّر للاستكشاف','SYSTEMS / ENGINEERING':'الأنظمة / الهندسة','INTELLIGENCE / AI':'الذكاء / AI','LEARNING / LMS':'التعلم / LMS','I build systems':'أبني أنظمة','that':'','make':'تُحدث','a difference.':'فرقًا حقيقيًا.','Explore my work':'اكتشف أعمالي','Open terminal':'افتح الطرفية','FOCUS AREAS':'مجالات التركيز','YEARS BUILDING':'سنوات من التطوير','LMS USERS REPORTED':'مستخدمو LMS تقريبًا',
     'A FEW WAYS I CAN HELP':'كيف يمكنني المساهمة','Choose your':'اختر','entry point.':'مجال اهتمامك.','Three areas. One engineering mindset.':'ثلاثة مجالات، بعقلية هندسية واحدة.','Explore what matters to you.':'اكتشف المجال الذي يهمك.','EXPLORE AREA':'استكشف المجال',
@@ -71,17 +79,36 @@ function App() {
   const [terminalOpen, setTerminalOpen] = useState(false)
   const [command, setCommand] = useState('')
   const [history, setHistory] = useState<{ cmd: string; output: string }[]>([])
-  const [repos, setRepos] = useState<{ name: string; description: string | null; html_url: string; stargazers_count: number; language: string | null }[]>([])
+  const [repos, setRepos] = useState<GitHubRepo[]>([])
   const [repoState, setRepoState] = useState<'loading' | 'ready' | 'error'>('loading')
+  const [contributions, setContributions] = useState<ContributionDay[]>([])
+  const [contributionTotal, setContributionTotal] = useState(0)
+  const [contributionState, setContributionState] = useState<'loading' | 'ready' | 'error'>('loading')
   const [mediumArticles, setMediumArticles] = useState<{ title: string; link: string; description: string; thumbnail?: string; pubDate?: string }[]>([])
   const [mediumState, setMediumState] = useState<'loading' | 'ready' | 'error'>('loading')
   const [mobileMenu, setMobileMenu] = useState(false)
 
   useEffect(() => {
-    fetch('https://api.github.com/users/hamzakhalem/repos?sort=updated&per_page=6')
+    fetch('https://api.github.com/users/hamzakhalem/repos?sort=updated&per_page=100', { cache: 'no-store' })
       .then((r) => { if (!r.ok) throw new Error('GitHub API unavailable'); return r.json() })
-      .then((data) => { setRepos(data.filter((repo: { fork: boolean }) => !repo.fork).slice(0, 4)); setRepoState('ready') })
+      .then((data: GitHubRepo[]) => {
+        if (!Array.isArray(data)) throw new Error('Invalid GitHub repository response')
+        setRepos(data.filter((repo) => !repo.fork && repo.pushed_at).sort((a, b) => Date.parse(b.pushed_at) - Date.parse(a.pushed_at)).slice(0, 4))
+        setRepoState('ready')
+      })
       .catch(() => setRepoState('error'))
+  }, [])
+
+  useEffect(() => {
+    fetch('https://github-contributions-api.jogruber.de/v4/hamzakhalem?y=last', { cache: 'no-store' })
+      .then((r) => { if (!r.ok) throw new Error('GitHub contribution data unavailable'); return r.json() })
+      .then((data: { contributions?: ContributionDay[]; total?: { lastYear?: number } }) => {
+        if (!Array.isArray(data.contributions)) throw new Error('Invalid GitHub contribution response')
+        setContributions(data.contributions)
+        setContributionTotal(data.total?.lastYear ?? data.contributions.reduce((total, day) => total + day.count, 0))
+        setContributionState('ready')
+      })
+      .catch(() => setContributionState('error'))
   }, [])
 
   useEffect(() => {
@@ -147,8 +174,8 @@ function App() {
     </section>
 
     <section className="github-section shell" id="github"><div className="github-header"><div><p className="overline">{t('OPEN SOURCE & CODE')}</p><h2>{t('Building in')} <span>{t('public.')}</span></h2><p className="github-intro">{t('A snapshot of my GitHub activity and repositories. Follow along as I keep learning, experimenting, and shipping.')}</p></div><a className="github-profile" href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer"><Github size={18}/> github.com/hamzakhalem <ArrowUpRight size={15}/></a></div>
-      <div className="contributions-card"><div className="contrib-top"><div><span className="live-dot"/> {t('CONTRIBUTION ACTIVITY')}</div><span className="contrib-hint">{t('Public GitHub contribution calendar')}</span></div><div className="contrib-image-wrap"><img className="contrib-image" src="https://ghchart.rshah.org/8b9cff/hamzakhalem" alt="GitHub contribution calendar for hamzakhalem" loading="lazy" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}/><div className="contrib-fallback">Contribution calendar is hosted by a third-party chart service. If it doesn't load, visit the GitHub profile to see activity.</div></div><div className="contrib-bottom"><span>{t('LESS')} <i className="level level-0"/><i className="level level-1"/><i className="level level-2"/><i className="level level-3"/><i className="level level-4"/> {t('MORE')}</span><a href="https://github.com/hamzakhalem?tab=overview&from=2025-01-01&to=2025-12-31" target="_blank" rel="noreferrer">{t('View full activity')} <ArrowUpRight size={14}/></a></div></div>
-      <div className="repo-heading"><h3>{t('Recently updated repositories')}</h3><span>{t('LIVE FROM GITHUB API')}</span></div><div className="repo-grid">{repoState === 'loading' && [1,2,3,4].map((n) => <div className="repo-card skeleton" key={n}><span/><span/><span/></div>)}{repoState === 'ready' && repos.map((repo) => <a className="repo-card" href={repo.html_url} target="_blank" rel="noreferrer" key={repo.name}><div className="repo-name"><Github size={15}/><strong>{repo.name}</strong><ArrowUpRight size={14}/></div><p>{repo.description || t('No description added yet.')}</p><div className="repo-meta"><span>{repo.language && <><i/> {repo.language}</>}</span><span>★ {repo.stargazers_count}</span></div></a>)}{repoState === 'error' && <div className="repo-error">{t("GitHub repositories couldn't be loaded right now.")} <a href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer">Open profile instead ↗</a></div>}</div>
+      <div className="contributions-card"><div className="contrib-top"><div><span className="live-dot"/> {t('CONTRIBUTION ACTIVITY')}</div><span className="contrib-hint">{contributionState === 'ready' ? <>{new Intl.NumberFormat(lang).format(contributionTotal)} {t('contributions in the past year')}</> : t('Public GitHub contribution calendar')}</span></div><div className="contrib-image-wrap">{contributionState === 'loading' && <span className="contrib-hint">{t('Public GitHub contribution calendar')}</span>}{contributionState === 'ready' && <div className="contrib-calendar" role="img" aria-label={`${contributionTotal} ${t('contributions in the past year')}`}>{contributions.map((day) => <span className={`contrib-day level-${Math.min(Math.max(day.level, 0), 4)}`} key={day.date} title={`${day.count} · ${new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(`${day.date}T12:00:00`))}`} />)}</div>}{contributionState === 'error' && <p className="contrib-fallback">{t('Contribution data could not be loaded.')} <a href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer">{t('Open profile instead ↗')}</a></p>}</div><div className="contrib-bottom"><span>{t('LESS')} <i className="level level-0"/><i className="level level-1"/><i className="level level-2"/><i className="level level-3"/><i className="level level-4"/> {t('MORE')}</span><a href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer">{t('View full activity')} <ArrowUpRight size={14}/></a></div></div>
+      <div className="repo-heading"><h3>{t('Recently updated repositories')}</h3><span>{t('LIVE FROM GITHUB API')}</span></div><div className="repo-grid">{repoState === 'loading' && [1,2,3,4].map((n) => <div className="repo-card skeleton" key={n}><span/><span/><span/></div>)}{repoState === 'ready' && repos.map((repo) => <a className="repo-card" href={repo.html_url} target="_blank" rel="noreferrer" key={repo.name}><div className="repo-name"><Github size={15}/><strong>{repo.name}</strong><ArrowUpRight size={14}/></div><p>{repo.description || t('No description added yet.')}</p><div className="repo-meta"><span>{repo.language && <><i/> {repo.language}</>}</span><span>★ {repo.stargazers_count}</span><span className="repo-date">{t('Pushed')} <time dateTime={repo.pushed_at}>{new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(repo.pushed_at))}</time></span></div></a>)}{repoState === 'error' && <div className="repo-error">{t("GitHub repositories couldn't be loaded right now.")} <a href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer">Open profile instead ↗</a></div>}</div>
     </section>
 
     <section className="medium-section shell" id="medium"><div className="medium-header"><div><p className="overline">{t('ARTICLES & NOTES')}</p><h2>{t('Ideas from my Medium blog.')}</h2></div><a className="medium-profile" href="https://medium.com/@hoh_112" target="_blank" rel="noreferrer"><BookOpen size={17}/> {t('More on Medium')} <ArrowUpRight size={15}/></a></div>
