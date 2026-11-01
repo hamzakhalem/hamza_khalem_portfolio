@@ -23,6 +23,10 @@ I have experience developing and customizing enterprise-scale platforms, buildin
 - JavaScript
 - Git & GitHub
 
+## Résumé
+
+The hero section includes a downloadable résumé. To update it, replace `public/resume.pdf`.
+
 ## Getting Started
 
 Clone the repository:
