@@ -33,6 +33,7 @@ const translations: Record<Lang, Record<string, string>> = {
   en: {},
   fr: {
     'Download CV':'Télécharger le CV',
+    'View GitHub':'Voir GitHub','Contact me':'Me contacter',
     'Pushed':'Dernier push :',
     'contributions in the past year':'contributions cette année',
     'Contribution data could not be loaded.':'Les contributions n’ont pas pu être chargées.',
@@ -51,6 +52,7 @@ const translations: Record<Lang, Record<string, string>> = {
   },
   ar: {
     'Download CV':'تحميل السيرة الذاتية',
+    'View GitHub':'عرض GitHub','Contact me':'تواصل معي',
     'Pushed':'آخر تحديث:',
     'contributions in the past year':'مساهمة خلال السنة الماضية',
     'Contribution data could not be loaded.':'تعذّر تحميل بيانات المساهمات.',
@@ -158,7 +160,7 @@ function App() {
         <p className="overline">{t('ENGINEERING DIGITAL EXPERIENCES')}</p>
         <h1>{t('I build systems')}<br/>{t('that')} <span className="muted-word">{t('make')}</span> <span className="accent-word">{t('a difference.')}</span></h1>
         <p className="hero-subtitle">{t("I'm Hamza Khalem, a Software Engineer working across backend platforms, AI-powered products, and learning systems.")}</p>
-        <div className="hero-buttons"><a className="button-primary" href="https://www.linkedin.com/in/hamza-khalem-436b29201" target="_blank" rel="noreferrer">{t('View LinkedIn profile')} <ArrowUpRight size={17}/></a><a className="button-secondary" href="https://www.linkedin.com/in/hamza-khalem-436b29201" target="_blank" rel="noreferrer"><Linkedin size={16}/> {t('Connect on LinkedIn')}</a><a className="button-secondary" href="/resume.pdf" download="Hamza-Khalem-CV.pdf"><Download size={16}/> {t('Download CV')}</a></div>
+        <div className="hero-buttons"><a className="button-primary" href="/resume.pdf" download="Hamza-Khalem-CV.pdf"><Download size={16}/> {t('Download CV')}</a><a className="button-secondary" href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer"><Github size={16}/> {t('View GitHub')} <ArrowUpRight size={15}/></a><a className="button-secondary" href="mailto:hamzakhalem97@gmail.com"><Mail size={16}/> {t('Contact me')}</a></div>
         <div className="hero-meta"><span><b>03</b> {t('FOCUS AREAS')}</span><i/><span><b>4+</b> {t('YEARS BUILDING')}</span><i/><span><b>300K</b> {t('LMS USERS REPORTED')}</span></div>
       </div>
       <div className="hero-visual" aria-label="Terminal preview"><div className="visual-grid"/><div className="code-window"><div className="window-top"><div className="window-dots"><i/><i/><i/></div><span>hamza@portfolio ~</span><Command size={14}/></div><div className="terminal-body"><p className="terminal-muted">// A little about what I do</p><p><span className="syntax-purple">const</span> <span className="syntax-blue">engineer</span> = {'{'}</p><p className="indent"><span className="syntax-blue">focus</span>: <span className="syntax-green">['software', 'AI', 'LMS']</span>,</p><p className="indent"><span className="syntax-blue">mindset</span>: <span className="syntax-green">'build with purpose'</span>,</p><p className="indent"><span className="syntax-blue">location</span>: <span className="syntax-green">'Algiers, DZ'</span></p><p>{'}'}</p><p className="terminal-spacer"><span className="syntax-purple">await</span> engineer.<span className="syntax-yellow">create</span>()<span className="cursor"/></p><div className="terminal-output"><span className="output-check">✓</span> Ready to build something meaningful.</div></div></div><div className="floating-chip chip-top"><Code2 size={15}/> Clean, thoughtful code</div><div className="floating-chip chip-bottom"><span className="chip-pulse"/> Shipping ideas into reality</div><div className="orbit orbit-one"/><div className="orbit orbit-two"/></div>
