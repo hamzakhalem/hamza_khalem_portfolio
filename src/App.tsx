@@ -1,106 +1,50 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, BookOpen, ChevronRight, Code2, Command, Download, Github, Linkedin, Mail, Menu, Terminal, X } from 'lucide-react'
+import { ArrowDownRight, ArrowUpRight, BookOpen, ChevronRight, Code2, Download, Github, Globe, Linkedin, Lock, Mail, Menu, Star, Terminal, X } from 'lucide-react'
+import { about, areas, education, experience, hero, langPath, links, meta, projects, repos, ui, type Area, type Lang, type Tx } from './content'
+import { fetchArticles, type Article } from './articles'
 
-type Area = 'software' | 'ai' | 'lms'
-type Project = { title: string; category: Area; eyebrow: string; description: string; stack: string[]; outcome: string }
-type GitHubRepo = { name: string; description: string | null; html_url: string; stargazers_count: number; language: string | null; fork: boolean; pushed_at: string }
 type ContributionDay = { date: string; count: number; level: number }
+type Props = { initialLang: Lang; initialArticles: Article[] }
 
-const projects: Project[] = [
-  { title: 'Medad / TVTC Learning Platform', category: 'lms', eyebrow: 'LARGE-SCALE LMS', description: 'Engineering and extending a Moodle-based learning environment for educational institutions, from assessment workflows to platform integrations.', stack: ['Moodle', 'PHP 8.1', 'PostgreSQL', 'Docker'], outcome: 'Reported scale: 300k users · 25k concurrent users' },
-  { title: 'AI Tutor', category: 'ai', eyebrow: 'AI IN EDUCATION', description: 'AI-assisted learning experience integrated into an LMS to help learners engage with course content in a more conversational way.', stack: ['OpenAI API', 'Moodle', 'PHP'], outcome: 'AI capability integrated into existing learning workflows' },
-  { title: 'AI Question Creator', category: 'ai', eyebrow: 'ASSESSMENT AUTOMATION', description: 'AI-supported question creation designed to help educators turn learning content into assessment material.', stack: ['OpenAI API', 'Moodle', 'PHP'], outcome: 'Supports teacher workflows for question authoring' },
-  { title: 'AI PDF Assistant', category: 'ai', eyebrow: 'DOCUMENT INTELLIGENCE', description: 'An AI-powered assistant for uploading and querying PDFs, turning document-heavy workflows into conversational, grounded interactions.', stack: ['OpenAI API', 'React', 'Node.js', 'PDF Parsing', 'PostgreSQL'], outcome: 'Makes large documents searchable and explainable through natural-language Q&A' },
-  { title: 'Platform API & Integrations', category: 'software', eyebrow: 'BACKEND ENGINEERING', description: 'Custom API behavior and integrations spanning authentication, payments, messaging, data transfer, and platform services.', stack: ['PHP', 'REST APIs', 'PostgreSQL', 'Redis'], outcome: 'Connected platform workflows and third-party services' },
-  { title: 'AI-Assisted Quiz Proctoring', category: 'ai', eyebrow: 'SMART ASSESSMENTS', description: 'AI-enabled proctoring functionality embedded in quiz workflows to support online assessment processes.', stack: ['Moodle', 'OpenAI API', 'PHP'], outcome: 'AI-assisted capability within quiz delivery' },
-  { title: 'Web, Mobile & Backend Apps', category: 'software', eyebrow: 'FULL-STACK DEVELOPMENT', description: 'Project work across web, mobile, and backend layers using React, React Native, Django, and related tools.', stack: ['React', 'React Native', 'Django'], outcome: 'Cross-platform product development experience' },
-]
+const ext = { target: '_blank', rel: 'noreferrer' } as const
 
-const areas: { id: Area; number: string; title: string; description: string; tags: string[] }[] = [
-  { id: 'software', number: '01', title: 'Software Engineering', description: 'Backend systems, APIs, integrations, and production software that has to work reliably.', tags: ['Backend & APIs', 'Platform engineering', 'Integrations'] },
-  { id: 'ai', number: '02', title: 'Artificial Intelligence', description: 'Practical AI features integrated into real products and workflows—not just demos.', tags: ['AI integrations', 'AI for education', 'Product workflows'] },
-  { id: 'lms', number: '03', title: 'Learning Systems', description: 'Deep Moodle and LMS experience across assessment, learning workflows, and large-scale delivery.', tags: ['Moodle', 'EdTech', 'Learning platforms'] },
-]
-
-const terminalLines = [
-  { prompt: 'whoami', output: 'Software Engineer · Algiers, Algeria' },
-  { prompt: 'cat focus.txt', output: 'Backend systems, AI integrations, and learning platforms.' },
-  { prompt: 'ls ./toolkit', output: 'PHP · Moodle · PostgreSQL · React · Python · Docker' },
-]
-
-
-type Lang = 'en' | 'fr' | 'ar'
-const translations: Record<Lang, Record<string, string>> = {
-  en: {},
-  fr: {
-    'Download CV':'Télécharger le CV',
-    'View GitHub':'Voir GitHub','Contact me':'Me contacter',
-    'Pushed':'Dernier push :',
-    'contributions in the past year':'contributions cette année',
-    'Contribution data could not be loaded.':'Les contributions n’ont pas pu être chargées.',
-    'Software Engineering':'Ingénierie logicielle','Artificial Intelligence':'Intelligence artificielle','Learning Systems':'Systèmes d’apprentissage','Expertise':'Expertise','Projects':'Projets','About':'À propos','Terminal':'Terminal','Let’s talk':'Parlons-en','OPEN TO THE RIGHT OPPORTUNITY':'À L’ÉCOUTE DE LA BONNE OPPORTUNITÉ','ENGINEERING DIGITAL EXPERIENCES':'CONCEVOIR DES EXPÉRIENCES NUMÉRIQUES',
-    "I'm Hamza Khalem, a Software Engineer working across backend platforms, AI-powered products, and learning systems.":'Je suis Hamza Khalem, ingénieur logiciel travaillant sur des plateformes backend, des produits intégrant l’IA et des systèmes d’apprentissage.','Backend & APIs':'Backend et API','Platform engineering':'Ingénierie de plateforme','Integrations':'Intégrations','AI integrations':'Intégrations IA','AI for education':'IA pour l’éducation','Product workflows':'Processus produit','EdTech':'EdTech','Learning platforms':'Plateformes d’apprentissage','SCROLL TO EXPLORE':'DÉFILER POUR EXPLORER','SYSTEMS / ENGINEERING':'SYSTÈMES / INGÉNIERIE','INTELLIGENCE / AI':'INTELLIGENCE / IA','LEARNING / LMS':'APPRENTISSAGE / LMS','I build systems':'Je crée des systèmes','that':'qui','make':'font','a difference.':'la différence.','View LinkedIn profile':'Voir le profil LinkedIn','Connect on LinkedIn':'Me contacter sur LinkedIn','FOCUS AREAS':'DOMAINES','YEARS BUILDING':'ANS D’EXPÉRIENCE','LMS USERS REPORTED':'UTILISATEURS LMS ESTIMÉS',
-    'A FEW WAYS I CAN HELP':'COMMENT JE PEUX AIDER','Choose your':'Choisissez votre','entry point.':'point d’entrée.','Three areas. One engineering mindset.':'Trois domaines. Une même approche d’ingénierie.','Explore what matters to you.':'Explorez ce qui vous intéresse.','EXPLORE AREA':'EXPLORER CE DOMAINE',
-    'SELECTED WORK & EXPERIENCE':'PROJETS ET EXPÉRIENCE','Things I\'ve':'Ce sur quoi j’ai','worked on.':'travaillé.','All work':'Tout','Software':'Logiciel','Selected work is presented as experience highlights. Some projects are proprietary and cannot be shared publicly.':'Cette sélection présente des exemples de mon expérience. Certains projets sont propriétaires et ne peuvent pas être partagés publiquement.',
-    'ARTICLES & NOTES':'ARTICLES ET NOTES','Ideas from my Medium blog.':'Des idées issues de mon blog Medium.','Read article':'Lire l’article','More on Medium':'Plus d’articles sur Medium','Articles are temporarily unavailable. Visit my Medium profile to read my writing.':'Les articles sont temporairement indisponibles. Consultez mon profil Medium pour lire mes publications.','OPEN SOURCE & CODE':'OPEN SOURCE ET CODE','Building in':'Construire en','public.':'public.','A snapshot of my GitHub activity and repositories. Follow along as I keep learning, experimenting, and shipping.':'Un aperçu de mon activité GitHub et de mes dépôts. Suivez mes apprentissages, expérimentations et réalisations.','CONTRIBUTION ACTIVITY':'ACTIVITÉ DE CONTRIBUTION','Public GitHub contribution calendar':'Calendrier public des contributions GitHub','LESS':'MOINS','MORE':'PLUS','View full activity':'Voir toute l’activité','Recently updated repositories':'Dépôts récemment mis à jour','LIVE FROM GITHUB API':'EN DIRECT DE L’API GITHUB','No description added yet.':'Aucune description pour le moment.','GitHub repositories couldn\'t be loaded right now.':'Impossible de charger les dépôts GitHub pour le moment.','Open profile instead ↗':'Voir le profil ↗',
-    'A LITTLE ABOUT ME':'À PROPOS DE MOI','Curious by nature.':'Curieux de nature.','Engineer by choice.':'Ingénieur par choix.','I enjoy working where complex systems meet real people: making platforms more reliable, connecting services, and finding useful ways to bring AI into everyday workflows.':'J’aime relier les systèmes complexes aux besoins réels : fiabiliser les plateformes, connecter les services et intégrer utilement l’IA aux processus quotidiens.','My experience spans large-scale learning platforms, backend development, integrations, and web/mobile projects. I value clear thinking, maintainable solutions, and work that makes a measurable difference.':'Mon expérience couvre les plateformes d’apprentissage à grande échelle, le backend, les intégrations et les projets web/mobile. Je privilégie la clarté, la maintenabilité et les résultats concrets.','Systems thinking':'Vision système','Beyond the feature':'Au-delà de la fonctionnalité','Practical AI':'IA pratique','Useful over hype':'Utile avant tout','Always learning':'Toujours apprendre','Keep improving':'Progresser continuellement',
-    'HAVE A GOOD PROBLEM TO SOLVE?':'UN BON DÉFI À RELEVER ?','Let\'s build something':'Construisons quelque chose','worth building.':'qui en vaut la peine.','Open to software engineering, AI integration, and LMS opportunities.':'Ouvert aux opportunités en ingénierie logicielle, intégration IA et LMS.','Start a conversation':'Me contacter sur LinkedIn','Email':'E-mail','Designed with intent. Built with curiosity.':'Conçu avec intention. Réalisé avec curiosité.',
-    'Backend systems, APIs, integrations, and production software that has to work reliably.':'Systèmes backend, API, intégrations et logiciels de production fiables.','Practical AI features integrated into real products and workflows—not just demos.':'Fonctionnalités IA concrètes intégrées à de vrais produits et processus.','Deep Moodle and LMS experience across assessment, learning workflows, and large-scale delivery.':'Expérience approfondie de Moodle et des LMS : évaluations, parcours d’apprentissage et déploiement à grande échelle.',
-    'LARGE-SCALE LMS':'LMS À GRANDE ÉCHELLE','AI IN EDUCATION':'IA DANS L’ÉDUCATION','ASSESSMENT AUTOMATION':'AUTOMATISATION DES ÉVALUATIONS','BACKEND ENGINEERING':'INGÉNIERIE BACKEND','SMART ASSESSMENTS':'ÉVALUATIONS INTELLIGENTES','FULL-STACK DEVELOPMENT':'DÉVELOPPEMENT FULL-STACK',
-    'Engineering and extending a Moodle-based learning environment for educational institutions, from assessment workflows to platform integrations.':'Développement et extension d’un environnement Moodle pour des établissements éducatifs, des évaluations aux intégrations.','AI-assisted learning experience integrated into an LMS to help learners engage with course content in a more conversational way.':'Expérience d’apprentissage assistée par IA intégrée à un LMS pour interagir avec les contenus de cours.','AI-supported question creation designed to help educators turn learning content into assessment material.':'Création de questions assistée par IA pour transformer les contenus pédagogiques en évaluations.','Custom API behavior and integrations spanning authentication, payments, messaging, data transfer, and platform services.':'Personnalisation d’API et intégrations couvrant authentification, paiements, messagerie et transferts de données.','AI-enabled proctoring functionality embedded in quiz workflows to support online assessment processes.':'Fonctionnalités de surveillance assistée par IA intégrées aux questionnaires en ligne.','Project work across web, mobile, and backend layers using React, React Native, Django, and related tools.':'Projets web, mobile et backend avec React, React Native, Django et technologies associées.',
-    'Reported scale: 300k users · 25k concurrent users':'Échelle estimée : 300 000 utilisateurs · 25 000 simultanés','AI capability integrated into existing learning workflows':'Fonctionnalité IA intégrée aux parcours d’apprentissage','Supports teacher workflows for question authoring':'Facilite la création de questions par les enseignants','Connected platform workflows and third-party services':'Connexion des processus et services tiers','AI-assisted capability within quiz delivery':'Fonctionnalité IA intégrée aux évaluations','Cross-platform product development experience':'Expérience de développement multiplateforme',
-    'Available: help, about, skills, projects, contact, clear':'Commandes : help, about, skills, projects, contact, clear','I am Hamza, a Software Engineer focused on backend platforms, AI integrations, and learning systems.':'Je suis Hamza, ingénieur logiciel spécialisé en plateformes backend, intégrations IA et systèmes d’apprentissage.','Explore the project cards below, or choose one of the three focus areas above.':'Explorez les projets ci-dessous ou choisissez l’un des trois domaines ci-dessus.','Command not found:':'Commande introuvable :','Type “help” to see available commands.':'Tapez « help » pour voir les commandes.','Welcome! This is a tiny interactive terminal. Type':'Bienvenue ! Ceci est un petit terminal interactif. Tapez','to get started.':'pour commencer.','type a command…':'saisir une commande…','Try:':'Essayez :','ESC / click outside to close':'Échap / clic à l’extérieur pour fermer',
-  },
-  ar: {
-    'Download CV':'تحميل السيرة الذاتية',
-    'View GitHub':'عرض GitHub','Contact me':'تواصل معي',
-    'Pushed':'آخر تحديث:',
-    'contributions in the past year':'مساهمة خلال السنة الماضية',
-    'Contribution data could not be loaded.':'تعذّر تحميل بيانات المساهمات.',
-    'Software Engineering':'هندسة البرمجيات','Artificial Intelligence':'الذكاء الاصطناعي','Learning Systems':'أنظمة التعلم','Expertise':'مجالات الخبرة','Projects':'المشاريع','About':'نبذة عني','Terminal':'الطرفية','Let’s talk':'لنتحدث','OPEN TO THE RIGHT OPPORTUNITY':'منفتح على الفرص المناسبة','ENGINEERING DIGITAL EXPERIENCES':'هندسة التجارب الرقمية',
-    "I'm Hamza Khalem, a Software Engineer working across backend platforms, AI-powered products, and learning systems.":'أنا حمزة خالم، مهندس برمجيات أعمل على الأنظمة الخلفية والمنتجات المدعومة بالذكاء الاصطناعي ومنصات التعلم.','Backend & APIs':'الأنظمة الخلفية وواجهات API','Platform engineering':'هندسة المنصات','Integrations':'التكاملات','AI integrations':'تكاملات الذكاء الاصطناعي','AI for education':'الذكاء الاصطناعي في التعليم','Product workflows':'مسارات المنتج','EdTech':'تقنيات التعليم','Learning platforms':'منصات التعلم','SCROLL TO EXPLORE':'مرّر للاستكشاف','SYSTEMS / ENGINEERING':'الأنظمة / الهندسة','INTELLIGENCE / AI':'الذكاء / AI','LEARNING / LMS':'التعلم / LMS','I build systems':'أبني أنظمة','that':'','make':'تُحدث','a difference.':'فرقًا حقيقيًا.','Explore my work':'اكتشف أعمالي','Open terminal':'افتح الطرفية','FOCUS AREAS':'مجالات التركيز','YEARS BUILDING':'سنوات من التطوير','LMS USERS REPORTED':'مستخدمو LMS تقريبًا',
-    'A FEW WAYS I CAN HELP':'كيف يمكنني المساهمة','Choose your':'اختر','entry point.':'مجال اهتمامك.','Three areas. One engineering mindset.':'ثلاثة مجالات، بعقلية هندسية واحدة.','Explore what matters to you.':'اكتشف المجال الذي يهمك.','EXPLORE AREA':'استكشف المجال',
-    'SELECTED WORK & EXPERIENCE':'أعمال مختارة وخبرة','Things I\'ve':'أعمال','worked on.':'حملت بصمتي','All work':'الكل','Software':'البرمجيات','Selected work is presented as experience highlights. Some projects are proprietary and cannot be shared publicly.':'هذه نماذج من خبرتي العملية. بعض المشاريع مملوكة لجهات العمل ولا يمكن نشر تفاصيلها.',
-    'ARTICLES & NOTES':'مقالات وأفكار','Ideas from my Medium blog.':'أفكار ومقالات من مدونتي على Medium.','Read article':'اقرأ المقال','More on Medium':'المزيد على Medium','Articles are temporarily unavailable. Visit my Medium profile to read my writing.':'المقالات غير متاحة مؤقتاً. زوروا حسابي على Medium لقراءة كتاباتي.','OPEN SOURCE & CODE':'المصادر المفتوحة والبرمجة','Building in':'أبني وأشارك','public.':'علناً.','A snapshot of my GitHub activity and repositories. Follow along as I keep learning, experimenting, and shipping.':'لمحة عن نشاطي ومستودعاتي على GitHub. تابع تجاربي وتعلمي والمشاريع التي أعمل عليها.','CONTRIBUTION ACTIVITY':'نشاط المساهمات','Public GitHub contribution calendar':'تقويم مساهمات GitHub العامة','LESS':'أقل','MORE':'أكثر','View full activity':'عرض النشاط كاملاً','Recently updated repositories':'المستودعات المحدّثة مؤخراً','LIVE FROM GITHUB API':'مباشر من GitHub API','No description added yet.':'لا يوجد وصف بعد.','GitHub repositories couldn\'t be loaded right now.':'تعذّر تحميل مستودعات GitHub حالياً.','Open profile instead ↗':'افتح الملف الشخصي ↗',
-    'A LITTLE ABOUT ME':'نبذة عني','Curious by nature.':'فضولي بطبعي.','Engineer by choice.':'ومهندس باختياري.','I enjoy working where complex systems meet real people: making platforms more reliable, connecting services, and finding useful ways to bring AI into everyday workflows.':'أحب العمل عند نقطة التقاء الأنظمة المعقدة باحتياجات الناس: تحسين موثوقية المنصات، وربط الخدمات، وتوظيف الذكاء الاصطناعي بشكل عملي.','My experience spans large-scale learning platforms, backend development, integrations, and web/mobile projects. I value clear thinking, maintainable solutions, and work that makes a measurable difference.':'تشمل خبرتي منصات تعليمية واسعة النطاق، وتطوير الخلفية، والتكاملات، ومشاريع الويب والهاتف. أقدّر الحلول الواضحة والقابلة للصيانة والنتائج الملموسة.','Systems thinking':'التفكير المنظومي','Beyond the feature':'ما وراء الميزة','Practical AI':'ذكاء اصطناعي عملي','Useful over hype':'الفائدة قبل الضجة','Always learning':'التعلم المستمر','Keep improving':'التطور باستمرار',
-    'HAVE A GOOD PROBLEM TO SOLVE?':'عندك تحدٍ يستحق الحل؟','Let\'s build something':'لنبنِ شيئاً','worth building.':'يستحق البناء.','Open to software engineering, AI integration, and LMS opportunities.':'منفتح على فرص هندسة البرمجيات وتكامل الذكاء الاصطناعي وأنظمة إدارة التعلم.','View LinkedIn profile':'عرض حساب LinkedIn','Connect on LinkedIn':'تواصل معي على LinkedIn','Email':'البريد الإلكتروني','Designed with intent. Built with curiosity.':'تصميم هادف، وبناء بفضول.','Backend systems, APIs, integrations, and production software that has to work reliably.':'أنظمة خلفية وواجهات API وتكاملات وبرمجيات إنتاج موثوقة.','Practical AI features integrated into real products and workflows—not just demos.':'ميزات ذكاء اصطناعي عملية ضمن منتجات وسير عمل حقيقية، لا مجرد عروض تجريبية.','Deep Moodle and LMS experience across assessment, learning workflows, and large-scale delivery.':'خبرة معمقة في Moodle وأنظمة التعلم والتقييم والنشر واسع النطاق.',
-    'LARGE-SCALE LMS':'نظام تعلم واسع النطاق','AI IN EDUCATION':'الذكاء الاصطناعي في التعليم','ASSESSMENT AUTOMATION':'أتمتة التقييم','BACKEND ENGINEERING':'هندسة الأنظمة الخلفية','SMART ASSESSMENTS':'تقييمات ذكية','FULL-STACK DEVELOPMENT':'تطوير متكامل',
-    'Engineering and extending a Moodle-based learning environment for educational institutions, from assessment workflows to platform integrations.':'تطوير وتوسيع بيئة تعلم مبنية على Moodle للمؤسسات التعليمية، من الاختبارات إلى تكامل المنصات.','AI-assisted learning experience integrated into an LMS to help learners engage with course content in a more conversational way.':'تجربة تعلم مدعومة بالذكاء الاصطناعي مدمجة في نظام إدارة التعلم.','AI-supported question creation designed to help educators turn learning content into assessment material.':'إنشاء أسئلة بمساعدة الذكاء الاصطناعي لتحويل المحتوى التعليمي إلى تقييمات.','Custom API behavior and integrations spanning authentication, payments, messaging, data transfer, and platform services.':'تخصيص واجهات API والتكاملات للمصادقة والدفع والرسائل ونقل البيانات والخدمات.','AI-enabled proctoring functionality embedded in quiz workflows to support online assessment processes.':'وظائف مراقبة اختبارات مدعومة بالذكاء الاصطناعي ضمن الاختبارات الإلكترونية.','Project work across web, mobile, and backend layers using React, React Native, Django, and related tools.':'مشاريع ويب وهاتف وأنظمة خلفية باستخدام React وReact Native وDjango.',
-    'Reported scale: 300k users · 25k concurrent users':'الحجم التقريبي: 300 ألف مستخدم · 25 ألفاً بالتزامن','AI capability integrated into existing learning workflows':'دمج الذكاء الاصطناعي في مسارات التعلم','Supports teacher workflows for question authoring':'يساعد المدرسين في إعداد الأسئلة','Connected platform workflows and third-party services':'ربط مسارات المنصة والخدمات الخارجية','AI-assisted capability within quiz delivery':'ميزة ذكاء اصطناعي ضمن الاختبارات','Cross-platform product development experience':'خبرة في تطوير منتجات متعددة المنصات',
-    'Available: help, about, skills, projects, contact, clear':'الأوامر: help, about, skills, projects, contact, clear','I am Hamza, a Software Engineer focused on backend platforms, AI integrations, and learning systems.':'أنا حمزة، مهندس برمجيات أركز على الأنظمة الخلفية وتكاملات الذكاء الاصطناعي ومنصات التعلم.','Explore the project cards below, or choose one of the three focus areas above.':'استكشف المشاريع أدناه أو اختر أحد المجالات الثلاثة أعلاه.','Command not found:':'الأمر غير معروف:','Type “help” to see available commands.':'اكتب help لعرض الأوامر المتاحة.','Welcome! This is a tiny interactive terminal. Type':'مرحباً! هذه طرفية تفاعلية بسيطة. اكتب','to get started.':'للبدء.','type a command…':'اكتب أمراً…','Try:':'جرّب:','ESC / click outside to close':'Esc / اضغط خارج النافذة للإغلاق',
-  }
-}
-const translate = (lang: Lang, text: string) => translations[lang][text] ?? text
-
-function App() {
+function App({ initialLang, initialArticles }: Props) {
+  const [lang, setLangState] = useState<Lang>(initialLang)
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
   const [activeArea, setActiveArea] = useState<Area | 'all'>('all')
-  const [lang, setLang] = useState<Lang>(() => (localStorage.getItem('portfolio-lang') as Lang) || 'en')
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => (localStorage.getItem('portfolio-theme') as 'dark' | 'light') || 'dark')
-  const t = (text: string) => translate(lang, text)
-  useEffect(() => { localStorage.setItem('portfolio-lang', lang); document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'; document.title = lang === 'ar' ? 'حمزة خالم — مهندس برمجيات' : lang === 'fr' ? 'Hamza Khalem — Ingénieur logiciel' : 'Hamza Khalem — Software Engineer' }, [lang])
-  useEffect(() => { localStorage.setItem('portfolio-theme', theme) }, [theme])
   const [terminalOpen, setTerminalOpen] = useState(false)
   const [command, setCommand] = useState('')
   const [history, setHistory] = useState<{ cmd: string; output: string }[]>([])
-  const [repos, setRepos] = useState<GitHubRepo[]>([])
-  const [repoState, setRepoState] = useState<'loading' | 'ready' | 'error'>('loading')
   const [contributions, setContributions] = useState<ContributionDay[]>([])
   const [contributionTotal, setContributionTotal] = useState(0)
   const [contributionState, setContributionState] = useState<'loading' | 'ready' | 'error'>('loading')
-  const [mediumArticles, setMediumArticles] = useState<{ title: string; link: string; description: string; thumbnail?: string; pubDate?: string }[]>([])
-  const [mediumState, setMediumState] = useState<'loading' | 'ready' | 'error'>('loading')
+  const [articles, setArticles] = useState<Article[]>(initialArticles)
+  const [articleState, setArticleState] = useState<'loading' | 'ready' | 'error'>(initialArticles.length ? 'ready' : 'loading')
   const [mobileMenu, setMobileMenu] = useState(false)
+  const t = (v: Tx) => v[lang]
 
+  const setLang = (next: Lang) => {
+    setLangState(next)
+    try { localStorage.setItem('portfolio-lang', next) } catch { /* storage unavailable */ }
+    window.history.replaceState(null, '', langPath(next) + window.location.hash)
+  }
+
+  // Preferences are read after hydration so the prerendered HTML and the first client render match.
   useEffect(() => {
-    fetch('https://api.github.com/users/hamzakhalem/repos?sort=updated&per_page=100', { cache: 'no-store' })
-      .then((r) => { if (!r.ok) throw new Error('GitHub API unavailable'); return r.json() })
-      .then((data: GitHubRepo[]) => {
-        if (!Array.isArray(data)) throw new Error('Invalid GitHub repository response')
-        setRepos(data.filter((repo) => !repo.fork && repo.pushed_at).sort((a, b) => Date.parse(b.pushed_at) - Date.parse(a.pushed_at)).slice(0, 4))
-        setRepoState('ready')
-      })
-      .catch(() => setRepoState('error'))
+    try {
+      const savedTheme = localStorage.getItem('portfolio-theme')
+      if (savedTheme === 'light') setTheme('light')
+      const savedLang = localStorage.getItem('portfolio-lang') as Lang | null
+      if (window.location.pathname === '/' && (savedLang === 'fr' || savedLang === 'ar')) setLang(savedLang)
+    } catch { /* storage unavailable */ }
   }, [])
+  useEffect(() => { try { localStorage.setItem('portfolio-theme', theme) } catch { /* storage unavailable */ } }, [theme])
+  useEffect(() => {
+    document.documentElement.lang = lang
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
+    document.title = meta.title[lang]
+    document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description[lang])
+  }, [lang])
 
   useEffect(() => {
     fetch('https://github-contributions-api.jogruber.de/v4/hamzakhalem?y=last', { cache: 'no-store' })
@@ -114,86 +58,176 @@ function App() {
       .catch(() => setContributionState('error'))
   }, [])
 
+  // Articles are prerendered at build time; refresh them in the browser so new posts show up between deploys.
   useEffect(() => {
-    const feedUrl = encodeURIComponent('https://medium.com/feed/@hoh_112')
-    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${feedUrl}`)
-      .then((r) => { if (!r.ok) throw new Error('Medium feed unavailable'); return r.json() })
-      .then((data) => {
-        if (data.status !== 'ok' || !Array.isArray(data.items)) throw new Error('Invalid Medium feed')
-        setMediumArticles(data.items.slice(0, 3).map((item: { title: string; link: string; description?: string; content?: string; thumbnail?: string; pubDate?: string }) => ({
-          title: item.title, link: item.link, description: (item.description || item.content || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim().slice(0, 190), thumbnail: item.thumbnail, pubDate: item.pubDate
-        })))
-        setMediumState('ready')
-      })
-      .catch(() => setMediumState('error'))
+    fetchArticles()
+      .then((items) => { if (items.length) { setArticles(items); setArticleState('ready') } else if (!initialArticles.length) setArticleState('error') })
+      .catch(() => { if (!initialArticles.length) setArticleState('error') })
   }, [])
 
+  useEffect(() => {
+    if (!terminalOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setTerminalOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [terminalOpen])
+
   const visibleProjects = useMemo(() => activeArea === 'all' ? projects : projects.filter((p) => p.category === activeArea), [activeArea])
+  const dateFmt = (d: Date) => new Intl.DateTimeFormat(lang === 'ar' ? 'ar-DZ' : lang, { dateStyle: 'medium' }).format(d)
 
   function runCommand(raw: string) {
     const cmd = raw.trim().toLowerCase()
     if (!cmd) return
     const responses: Record<string, string> = {
-      help: 'Available: help, about, skills, projects, contact, clear',
-      about: 'I am Hamza, a Software Engineer focused on backend platforms, AI integrations, and learning systems.',
-      skills: 'PHP · Moodle · PostgreSQL · JavaScript · React · Python/Django · Docker · REST APIs',
-      projects: 'Explore the project cards below, or choose one of the three focus areas above.',
-      contact: 'Email: hamzakhalem97@gmail.com · GitHub: github.com/hamzakhalem',
+      help: t(ui.termHelp),
+      about: t(ui.termAbout),
+      skills: 'PHP · Moodle · PostgreSQL · Redis · Python/Django · React · Docker · REST APIs · LLM APIs',
+      projects: t(ui.termProjects),
+      contact: `Email: ${links.email} · GitHub: github.com/hamzakhalem`,
     }
     if (cmd === 'clear') { setHistory([]); setCommand(''); return }
-    setHistory((old) => [...old, { cmd: raw, output: responses[cmd] ?? `Command not found: ${raw}. Type “help” to see available commands.` }])
+    setHistory((old) => [...old, { cmd: raw, output: responses[cmd] ?? `${t(ui.termNotFound)} ${raw}. ${t(ui.termHelpHint)}` }])
     setCommand('')
   }
 
   const scrollTo = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); setMobileMenu(false) }
+  const artLabel = (a: Area) => t(a === 'software' ? ui.artSoftware : a === 'ai' ? ui.artAi : ui.artLms)
+  const nav: [string, Tx][] = [['experience', ui.navExperience], ['projects', ui.navWork], ['education', ui.navEducation], ['github', ui.navOpenSource], ['medium', ui.navArticles], ['about', ui.navAbout]]
 
-  return <main data-theme={theme} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+  return <main data-theme={theme} dir={lang === 'ar' ? 'rtl' : 'ltr'} lang={lang}>
     <header className="nav shell">
-      <a className="brand" href="#top" aria-label="Hamza Khalem home"><span className="brand-mark">hk<span>.</span></span><span className="brand-caption">SOFTWARE ENGINEER</span></a>
+      <a className="brand" href="#top" aria-label="Hamza Khalem"><span className="brand-mark">hk<span>.</span></span><span className="brand-caption">{t(ui.brandCaption)}</span></a>
       <nav className={mobileMenu ? 'nav-links open' : 'nav-links'}>
-        <button onClick={() => scrollTo('areas')}>{t('Expertise')}</button><button onClick={() => scrollTo('projects')}>{t('Projects')}</button><button onClick={() => scrollTo('github')}>GitHub</button><button onClick={() => scrollTo('medium')}>Medium</button><button onClick={() => scrollTo('about')}>{t('About')}</button>
+        {nav.map(([id, label]) => <a key={id} href={`#${id}`} onClick={(e) => { e.preventDefault(); scrollTo(id) }}>{t(label)}</a>)}
       </nav>
-      <div className="nav-actions"><div className="preferences"><select aria-label="Language" value={lang} onChange={(e) => setLang(e.target.value as Lang)}><option value="en">EN</option><option value="fr">FR</option><option value="ar">عربي</option></select><button className="theme-toggle" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>{theme === 'dark' ? '☼' : '☾'}</button></div><button className="terminal-trigger" onClick={() => setTerminalOpen(true)}><Terminal size={15} /> <span>{t('Terminal')}</span><kbd>↵</kbd></button><a className="contact-link" href="https://www.linkedin.com/in/hamza-khalem-436b29201" target="_blank" rel="noreferrer">{t('Let’s talk')} <ArrowUpRight size={15}/></a><button className="mobile-toggle" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Toggle menu">{mobileMenu ? <X/> : <Menu/>}</button></div>
+      <div className="nav-actions">
+        <div className="preferences">
+          <select aria-label="Language" value={lang} onChange={(e) => setLang(e.target.value as Lang)}><option value="en">EN</option><option value="fr">FR</option><option value="ar">عربي</option></select>
+          <button className="theme-toggle" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>{theme === 'dark' ? '☼' : '☾'}</button>
+        </div>
+        <button className="terminal-trigger" onClick={() => setTerminalOpen(true)}><Terminal size={15} /> <span>{t(ui.terminal)}</span><kbd>↵</kbd></button>
+        <a className="contact-link" href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact') }}>{t(ui.letsTalk)} <ArrowUpRight size={15}/></a>
+        <button className="mobile-toggle" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Toggle menu">{mobileMenu ? <X/> : <Menu/>}</button>
+      </div>
     </header>
 
     <section className="hero shell" id="top">
-      <div className="hero-copy"><div className="status"><span className="status-dot"/> {t('OPEN TO THE RIGHT OPPORTUNITY')} <span className="status-line"/></div>
-        <p className="overline">{t('ENGINEERING DIGITAL EXPERIENCES')}</p>
-        <h1>{t('I build systems')}<br/>{t('that')} <span className="muted-word">{t('make')}</span> <span className="accent-word">{t('a difference.')}</span></h1>
-        <p className="hero-subtitle">{t("I'm Hamza Khalem, a Software Engineer working across backend platforms, AI-powered products, and learning systems.")}</p>
-        <div className="hero-buttons"><a className="button-primary" href="/resume.pdf" download="Hamza-Khalem-CV.pdf"><Download size={16}/> {t('Download CV')}</a><a className="button-secondary" href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer"><Github size={16}/> {t('View GitHub')} <ArrowUpRight size={15}/></a><a className="button-secondary" href="mailto:hamzakhalem97@gmail.com"><Mail size={16}/> {t('Contact me')}</a></div>
-        <div className="hero-meta"><span><b>03</b> {t('FOCUS AREAS')}</span><i/><span><b>4+</b> {t('YEARS BUILDING')}</span><i/><span><b>300K</b> {t('LMS USERS REPORTED')}</span></div>
+      <div className="hero-copy">
+        <div className="status"><span className="status-dot"/> <span>{t(hero.availability)}</span></div>
+        <p className="overline hero-eyebrow">{t(hero.eyebrow)}</p>
+        <h1>{t(hero.headline)} <span className="accent-word">{t(hero.headlineAccent)}</span></h1>
+        <p className="hero-subtitle">{t(hero.sub)}</p>
+        <div className="hero-buttons">
+          <a className="button-primary" href={links.cv} download="Hamza-Khalem-CV.pdf"><Download size={16}/> {t(ui.downloadCv)}</a>
+          <a className="button-secondary" href={links.github} {...ext}><Github size={16}/> {t(ui.viewGithub)} <ArrowUpRight size={15}/></a>
+          <a className="button-secondary" href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact') }}><Mail size={16}/> {t(ui.contactMe)}</a>
+        </div>
+        <ul className="hero-meta">{hero.stats.map((s) => <li key={s.value}><b>{s.value}</b> {t(s.label)}</li>)}</ul>
       </div>
-      <div className="hero-visual" aria-label="Terminal preview"><div className="visual-grid"/><div className="code-window"><div className="window-top"><div className="window-dots"><i/><i/><i/></div><span>hamza@portfolio ~</span><Command size={14}/></div><div className="terminal-body"><p className="terminal-muted">// A little about what I do</p><p><span className="syntax-purple">const</span> <span className="syntax-blue">engineer</span> = {'{'}</p><p className="indent"><span className="syntax-blue">focus</span>: <span className="syntax-green">['software', 'AI', 'LMS']</span>,</p><p className="indent"><span className="syntax-blue">mindset</span>: <span className="syntax-green">'build with purpose'</span>,</p><p className="indent"><span className="syntax-blue">location</span>: <span className="syntax-green">'Algiers, DZ'</span></p><p>{'}'}</p><p className="terminal-spacer"><span className="syntax-purple">await</span> engineer.<span className="syntax-yellow">create</span>()<span className="cursor"/></p><div className="terminal-output"><span className="output-check">✓</span> Ready to build something meaningful.</div></div></div><div className="floating-chip chip-top"><Code2 size={15}/> Clean, thoughtful code</div><div className="floating-chip chip-bottom"><span className="chip-pulse"/> Shipping ideas into reality</div><div className="orbit orbit-one"/><div className="orbit orbit-two"/></div>
-      <button className="scroll-cue" onClick={() => scrollTo('areas')}><span>{t('SCROLL TO EXPLORE')}</span><ArrowDownRight size={15}/></button>
+      <aside className="hero-facts" aria-label={t(ui.atAGlance)}>
+        <div className="window-top"><div className="window-dots"><i/><i/><i/></div><span>{t(ui.atAGlance)}</span></div>
+        <dl>{hero.facts.map((f) => <div key={f.label.en}><dt>{t(f.label)}</dt><dd>{t(f.value)}</dd></div>)}</dl>
+      </aside>
+      <button className="scroll-cue" onClick={() => scrollTo('experience')}><span>{t(ui.scroll)}</span><ArrowDownRight size={15}/></button>
     </section>
 
-    <section className="areas-section shell" id="areas"><div className="section-heading"><div><p className="overline">{t('A FEW WAYS I CAN HELP')}</p><h2>{t('Choose your')} <span>{t('entry point.')}</span></h2></div><p className="section-aside">{t('Three areas. One engineering mindset.')}<br/>{t('Explore what matters to you.')}</p></div>
-      <div className="area-grid">{areas.map((area) => <button className={`area-card area-${area.id} ${activeArea === area.id ? 'selected' : ''}`} key={area.id} onClick={() => { setActiveArea(activeArea === area.id ? 'all' : area.id); scrollTo('projects') }}><div className="area-card-top"><span className="area-number">/{area.number}</span><span className="area-arrow"><ArrowUpRight size={18}/></span></div><div className="area-icon">{area.id === 'software' ? <Code2 size={23}/> : area.id === 'ai' ? <span className="ai-glyph">✳</span> : <span className="lms-glyph">▤</span>}</div><h3>{t(area.title)}</h3><p>{t(area.description)}</p><div className="area-tags">{area.tags.map((tag) => <span key={tag}>{t(tag)}</span>)}</div><div className="area-bottom"><span>{t('EXPLORE AREA')}</span><ChevronRight size={16}/></div></button>)}</div>
+    <section className="experience-section shell" id="experience">
+      <div className="section-heading"><div><p className="overline">{t(ui.expOverline)}</p><h2>{t(ui.expHeading)} <span>{t(ui.expHeadingAccent)}</span></h2></div></div>
+      <ol className="timeline">{experience.map((role) => <li className="role" key={role.company}>
+        <div className="role-head"><h3>{t(role.title)} <span className="role-company">· {role.company}</span></h3><span className="role-dates">{t(role.dates)}{role.location && <> · {t(role.location)}</>}</span></div>
+        {role.stack && <p className="role-stack">{role.stack}</p>}
+        <ul>{role.bullets.map((b) => <li key={b.en}>{t(b)}</li>)}</ul>
+      </li>)}</ol>
     </section>
 
-    <section className="projects-section shell" id="projects"><div className="section-heading"><div><p className="overline">{t('SELECTED WORK & EXPERIENCE')}</p><h2>{t("Things I've")} <span>{t('worked on.')}</span></h2></div><div className="project-filters"><button className={activeArea === 'all' ? 'filter active' : 'filter'} onClick={() => setActiveArea('all')}>{t('All work')}</button>{areas.map((a) => <button key={a.id} className={activeArea === a.id ? 'filter active' : 'filter'} onClick={() => setActiveArea(a.id)}>{a.id === 'software' ? t('Software') : a.id === 'ai' ? 'AI' : 'LMS'}</button>)}</div></div>
-      <div className="projects-grid">{visibleProjects.map((project, index) => <article className="project-card" key={project.title} style={{ animationDelay: `${index * 70}ms` }}><div className={`project-art art-${project.category}`}><span className="project-index">0{projects.indexOf(project) + 1}</span><div className="art-decoration"><span/><span/><span/></div><span className="project-art-label">{t(project.category === 'software' ? 'SYSTEMS / ENGINEERING' : project.category === 'ai' ? 'INTELLIGENCE / AI' : 'LEARNING / LMS')}</span></div><div className="project-content"><p className="project-eyebrow">{t(project.eyebrow)}</p><h3>{project.title}</h3><p className="project-description">{t(project.description)}</p><div className="stack-list">{project.stack.map((s) => <span key={s}>{s}</span>)}</div><div className="project-outcome"><span className="outcome-dot"/>{t(project.outcome)}</div></div></article>)}</div><p className="project-note">{t('Selected work is presented as experience highlights. Some projects are proprietary and cannot be shared publicly.')}</p>
+    <section className="projects-section shell" id="projects">
+      <div className="section-heading"><div><p className="overline">{t(ui.workOverline)}</p><h2>{t(ui.workHeading)} <span>{t(ui.workHeadingAccent)}</span></h2></div>
+        <div className="project-filters"><button className={activeArea === 'all' ? 'filter active' : 'filter'} onClick={() => setActiveArea('all')}>{t(ui.allWork)}</button>{areas.map((a) => <button key={a.id} className={activeArea === a.id ? 'filter active' : 'filter'} onClick={() => setActiveArea(a.id)}>{a.id === 'software' ? t(ui.filterSoftware) : a.id === 'ai' ? 'AI' : 'EdTech & LMS'}</button>)}</div>
+      </div>
+      <div className="projects-grid">{visibleProjects.map((p, index) => <article className={p.featured ? 'project-card featured' : 'project-card'} key={p.title} style={{ animationDelay: `${index * 70}ms` }}>
+        <div className={`project-art art-${p.category}`}><span className="project-index">{String(projects.indexOf(p) + 1).padStart(2, '0')}</span>{p.featured && <span className="tag tag-featured"><Star size={11}/> {t(ui.featured)}</span>}<div className="art-decoration"><span/><span/><span/></div><span className="project-art-label">{artLabel(p.category)}</span></div>
+        <div className="project-content">
+          <p className="project-eyebrow">{t(p.eyebrow)}</p>
+          <h3>{p.title}</h3>
+          {p.proprietary && <p className="tag tag-private"><Lock size={11}/> {t(ui.proprietary)}</p>}
+          <dl className="project-fields">
+            <div><dt>{t(ui.context)}</dt><dd>{t(p.context)}</dd></div>
+            <div><dt>{t(ui.myRole)}</dt><dd>{t(p.role)}</dd></div>
+            <div><dt>{t(ui.stack)}</dt><dd className="stack-list">{p.stack.map((s) => <span key={s}>{s}</span>)}</dd></div>
+            {p.result && <div className="project-outcome"><dt>{t(ui.result)}</dt><dd>{t(p.result)}</dd></div>}
+            {p.status && <div className="project-outcome"><dt>{t(ui.status)}</dt><dd>{t(p.status)}</dd></div>}
+          </dl>
+          {p.links && <div className="project-links">{p.links.map((l) => <a key={l.href} href={l.href} {...ext}>{l.kind === 'site' ? <Globe size={14}/> : <Github size={14}/>} {t(l.label)} <ArrowUpRight size={13}/></a>)}</div>}
+        </div>
+      </article>)}</div>
     </section>
 
-    <section className="github-section shell" id="github"><div className="github-header"><div><p className="overline">{t('OPEN SOURCE & CODE')}</p><h2>{t('Building in')} <span>{t('public.')}</span></h2><p className="github-intro">{t('A snapshot of my GitHub activity and repositories. Follow along as I keep learning, experimenting, and shipping.')}</p></div><a className="github-profile" href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer"><Github size={18}/> github.com/hamzakhalem <ArrowUpRight size={15}/></a></div>
-      <div className="contributions-card"><div className="contrib-top"><div><span className="live-dot"/> {t('CONTRIBUTION ACTIVITY')}</div><span className="contrib-hint">{contributionState === 'ready' ? <>{new Intl.NumberFormat(lang).format(contributionTotal)} {t('contributions in the past year')}</> : t('Public GitHub contribution calendar')}</span></div><div className="contrib-image-wrap">{contributionState === 'loading' && <span className="contrib-hint">{t('Public GitHub contribution calendar')}</span>}{contributionState === 'ready' && <div className="contrib-calendar" role="img" aria-label={`${contributionTotal} ${t('contributions in the past year')}`}>{contributions.map((day) => <span className={`contrib-day level-${Math.min(Math.max(day.level, 0), 4)}`} key={day.date} title={`${day.count} · ${new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(`${day.date}T12:00:00`))}`} />)}</div>}{contributionState === 'error' && <p className="contrib-fallback">{t('Contribution data could not be loaded.')} <a href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer">{t('Open profile instead ↗')}</a></p>}</div><div className="contrib-bottom"><span>{t('LESS')} <i className="level level-0"/><i className="level level-1"/><i className="level level-2"/><i className="level level-3"/><i className="level level-4"/> {t('MORE')}</span><a href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer">{t('View full activity')} <ArrowUpRight size={14}/></a></div></div>
-      <div className="repo-heading"><h3>{t('Recently updated repositories')}</h3><span>{t('LIVE FROM GITHUB API')}</span></div><div className="repo-grid">{repoState === 'loading' && [1,2,3,4].map((n) => <div className="repo-card skeleton" key={n}><span/><span/><span/></div>)}{repoState === 'ready' && repos.map((repo) => <a className="repo-card" href={repo.html_url} target="_blank" rel="noreferrer" key={repo.name}><div className="repo-name"><Github size={15}/><strong>{repo.name}</strong><ArrowUpRight size={14}/></div><p>{repo.description || t('No description added yet.')}</p><div className="repo-meta"><span>{repo.language && <><i/> {repo.language}</>}</span><span>★ {repo.stargazers_count}</span><span className="repo-date">{t('Pushed')} <time dateTime={repo.pushed_at}>{new Intl.DateTimeFormat(lang, { dateStyle: 'medium' }).format(new Date(repo.pushed_at))}</time></span></div></a>)}{repoState === 'error' && <div className="repo-error">{t("GitHub repositories couldn't be loaded right now.")} <a href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer">Open profile instead ↗</a></div>}</div>
+    <section className="areas-section shell" id="areas">
+      <div className="section-heading"><div><p className="overline">{t(ui.areasOverline)}</p><h2>{t(ui.areasHeading)} <span>{t(ui.areasHeadingAccent)}</span></h2></div><p className="section-aside">{t(ui.areasAside)}</p></div>
+      <div className="area-grid">{areas.map((area) => <button className={`area-card area-${area.id} ${activeArea === area.id ? 'selected' : ''}`} key={area.id} onClick={() => { setActiveArea(activeArea === area.id ? 'all' : area.id); scrollTo('projects') }}>
+        <div className="area-card-top"><span className="area-number">/{area.number}</span><span className="area-arrow"><ArrowUpRight size={18}/></span></div>
+        <div className="area-icon">{area.id === 'software' ? <Code2 size={23}/> : area.id === 'ai' ? <span className="ai-glyph">✳</span> : <span className="lms-glyph">▤</span>}</div>
+        <h3>{t(area.title)}</h3><p>{t(area.description)}</p>
+        <p className="area-proof"><span>{t(ui.proof)}</span>{t(area.proof)}</p>
+        <div className="area-tags">{area.tags.map((tag) => <span key={tag.en}>{t(tag)}</span>)}</div>
+        <div className="area-bottom"><span>{t(ui.exploreArea)}</span><ChevronRight size={16}/></div>
+      </button>)}</div>
     </section>
 
-    <section className="medium-section shell" id="medium"><div className="medium-header"><div><p className="overline">{t('ARTICLES & NOTES')}</p><h2>{t('Ideas from my Medium blog.')}</h2></div><a className="medium-profile" href="https://medium.com/@hoh_112" target="_blank" rel="noreferrer"><BookOpen size={17}/> {t('More on Medium')} <ArrowUpRight size={15}/></a></div>
-      {mediumState === 'loading' && <div className="medium-loading"><span className="live-dot"/> Loading Medium articles…</div>}
-      {mediumState === 'error' && <div className="medium-error">{t('Articles are temporarily unavailable. Visit my Medium profile to read my writing.')} <a href="https://medium.com/@hoh_112" target="_blank" rel="noreferrer">{t('More on Medium')} <ArrowUpRight size={14}/></a></div>}
-      {mediumState === 'ready' && <div className="medium-grid">{mediumArticles.map((article) => <article className="medium-card" key={article.link}>{article.thumbnail && <a className="medium-thumb" href={article.link} target="_blank" rel="noreferrer"><img src={article.thumbnail} alt="" loading="lazy"/></a>}<div className="medium-card-body">{article.pubDate && <span className="medium-date">{new Date(article.pubDate).toLocaleDateString(lang === 'ar' ? 'ar-DZ' : lang === 'fr' ? 'fr-FR' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>}<h3><a href={article.link} target="_blank" rel="noreferrer">{article.title}</a></h3><p>{article.description || t('Ideas from my Medium blog.')}</p><a className="medium-read" href={article.link} target="_blank" rel="noreferrer">{t('Read article')} <ArrowUpRight size={14}/></a></div></article>)}</div>}
+    <section className="education-section shell" id="education">
+      <div className="section-heading"><div><p className="overline">{t(ui.eduOverline)}</p><h2>{t(ui.eduHeading)} <span>{t(ui.eduHeadingAccent)}</span></h2></div></div>
+      <div className="edu-grid">
+        <div className="edu-card"><h3>{t(ui.degrees)}</h3><ul>{education.degrees.map((d) => <li key={d.years}><strong>{t(d.degree)}</strong><span>{t(d.school)} · {d.years}</span></li>)}</ul></div>
+        <div className="edu-card"><h3>{t(ui.certifications)}</h3><ul>{education.certifications.map((c) => <li key={c.en}><strong>{t(c)}</strong></li>)}</ul></div>
+        <div className="edu-card"><h3>{t(ui.languages)}</h3><ul>{education.languages.map((l) => <li key={l.name.en}><strong>{t(l.name)}</strong><span>{t(l.level)}</span></li>)}</ul></div>
+      </div>
     </section>
 
-    <section className="about-section shell" id="about"><div className="about-label"><p className="overline">{t('A LITTLE ABOUT ME')}</p><div className="about-monogram">H<span>K</span><i>.</i></div></div><div className="about-copy"><h2>{t('Curious by nature.')}<br/><span>{t('Engineer by choice.')}</span></h2><p>{t('I enjoy working where complex systems meet real people: making platforms more reliable, connecting services, and finding useful ways to bring AI into everyday workflows.')}</p><p>{t('My experience spans large-scale learning platforms, backend development, integrations, and web/mobile projects. I value clear thinking, maintainable solutions, and work that makes a measurable difference.')}</p><div className="about-facts"><div><span>01</span><strong>{t('Systems thinking')}</strong><small>{t('Beyond the feature')}</small></div><div><span>02</span><strong>{t('Practical AI')}</strong><small>{t('Useful over hype')}</small></div><div><span>03</span><strong>{t('Always learning')}</strong><small>{t('Keep improving')}</small></div></div></div></section>
+    <section className="github-section shell" id="github">
+      <div className="github-header"><div><p className="overline">{t(ui.ossOverline)}</p><h2>{t(ui.ossHeading)} <span>{t(ui.ossHeadingAccent)}</span></h2><p className="github-intro">{t(ui.ossIntro)}</p></div><a className="github-profile" href={links.github} {...ext}><Github size={18}/> github.com/hamzakhalem <ArrowUpRight size={15}/></a></div>
+      <div className="repo-heading"><h3>{t(ui.selectedRepos)}</h3></div>
+      <div className="repo-grid">{repos.map((repo) => <a className="repo-card" href={repo.url} {...ext} key={repo.name}><div className="repo-name"><Github size={15}/><strong>{repo.name}</strong><ArrowUpRight size={14}/></div><p>{t(repo.description)}</p><div className="repo-meta"><span><i/> {repo.tech}</span></div></a>)}</div>
+      <div className="contributions-card"><div className="contrib-top"><div><span className="live-dot"/> {t(ui.contribActivity)}</div><span className="contrib-hint">{contributionState === 'ready' ? <>{new Intl.NumberFormat(lang).format(contributionTotal)} {t(ui.contribPastYear)}</> : t(ui.contribCalendar)}</span></div>
+        <div className="contrib-image-wrap">{contributionState === 'loading' && <span className="contrib-hint">{t(ui.contribCalendar)}</span>}{contributionState === 'ready' && <div className="contrib-calendar" role="img" aria-label={`${contributionTotal} ${t(ui.contribPastYear)}`}>{contributions.map((day) => <span className={`contrib-day level-${Math.min(Math.max(day.level, 0), 4)}`} key={day.date} title={`${day.count} · ${dateFmt(new Date(`${day.date}T12:00:00`))}`} />)}</div>}{contributionState === 'error' && <p className="contrib-fallback">{t(ui.contribError)} <a href={links.github} {...ext}>{t(ui.openProfile)}</a></p>}</div>
+        <div className="contrib-bottom"><span>{t(ui.less)} <i className="level level-0"/><i className="level level-1"/><i className="level level-2"/><i className="level level-3"/><i className="level level-4"/> {t(ui.more)}</span><a href={links.github} {...ext}>{t(ui.fullActivity)} <ArrowUpRight size={14}/></a></div>
+      </div>
+    </section>
 
-    <section className="contact-section shell" id="contact"><div className="contact-panel"><div className="contact-orb"/><p className="overline">{t('HAVE A GOOD PROBLEM TO SOLVE?')}</p><h2>{t("Let's build something")}<br/><span>{t('worth building.')}</span></h2><p>{t('Open to software engineering, AI integration, and LMS opportunities.')}</p><a className="button-primary" href="https://www.linkedin.com/in/hamza-khalem-436b29201" target="_blank" rel="noreferrer">{t('Connect on LinkedIn')} <ArrowUpRight size={17}/></a><div className="contact-links"><a href="mailto:hamzakhalem97@gmail.com"><Mail size={15}/> {t('Email')}</a><a href="https://www.linkedin.com/in/hamza-khalem-436b29201" target="_blank" rel="noreferrer"><Linkedin size={15}/> LinkedIn <ArrowUpRight size={12}/></a><a href="https://github.com/hamzakhalem" target="_blank" rel="noreferrer"><Github size={15}/> GitHub <ArrowUpRight size={12}/></a></div></div></section>
+    <section className="medium-section shell" id="medium">
+      <div className="medium-header"><div><p className="overline">{t(ui.articlesOverline)}</p><h2>{t(ui.articlesHeading)}</h2></div><a className="medium-profile" href={links.medium} {...ext}><BookOpen size={17}/> {t(ui.moreOnMedium)} <ArrowUpRight size={15}/></a></div>
+      {articleState === 'loading' && <div className="medium-loading"><span className="live-dot"/> {t(ui.articlesLoading)}</div>}
+      {articleState === 'error' && <div className="medium-error">{t(ui.articlesError)} <a href={links.medium} {...ext}>{t(ui.moreOnMedium)} <ArrowUpRight size={14}/></a></div>}
+      {articleState === 'ready' && <div className="medium-grid">{articles.map((a) => <article className="medium-card" key={a.link}>{a.thumbnail && <a className="medium-thumb" href={a.link} {...ext}><img src={a.thumbnail} alt="" loading="lazy"/></a>}<div className="medium-card-body">{a.pubDate && <span className="medium-date">{dateFmt(new Date(a.pubDate.replace(' ', 'T') + 'Z'))}</span>}<h3><a href={a.link} {...ext}>{a.title}</a></h3>{a.description && <p>{a.description}</p>}<a className="medium-read" href={a.link} {...ext}>{t(ui.readArticle)} <ArrowUpRight size={14}/></a></div></article>)}</div>}
+    </section>
 
-    <footer className="footer shell"><a className="brand" href="#top"><span className="brand-mark">hk<span>.</span></span></a><span>{t('Designed with intent. Built with curiosity.')}</span><span>© {new Date().getFullYear()} Hamza Khalem</span></footer>
+    <section className="about-section shell" id="about">
+      <div className="about-label"><p className="overline">{t(ui.aboutOverline)}</p><div className="about-monogram" aria-hidden="true">H<span>K</span><i>.</i></div></div>
+      <div className="about-copy"><h2>{t(about.heading)}<br/><span>{t(about.headingAccent)}</span></h2><p>{t(about.body)}</p></div>
+    </section>
 
-    {terminalOpen && <div className="terminal-modal" role="dialog" aria-modal="true" aria-label={lang === 'ar' ? 'الطرفية التفاعلية' : lang === 'fr' ? 'Terminal interactif' : 'Interactive terminal'} onMouseDown={(e) => { if (e.target === e.currentTarget) setTerminalOpen(false) }}><div className="terminal-dialog"><div className="window-top"><div className="window-dots"><i/><i/><i/></div><span><Terminal size={13}/> interactive-terminal — bash</span><button onClick={() => setTerminalOpen(false)} aria-label="Close terminal"><X size={17}/></button></div><div className="modal-terminal-body"><p className="terminal-muted">{t('Welcome! This is a tiny interactive terminal. Type')} <b>help</b> {t('to get started.')}</p>{terminalLines.map((line) => <div className="term-example" key={line.prompt}><p><span className="prompt-symbol">➜</span> <span className="syntax-blue">~</span> {line.prompt}</p><p className="term-result">{line.output}</p></div>)}{history.map((item, i) => <div className="term-example" key={`${item.cmd}-${i}`}><p><span className="prompt-symbol">➜</span> <span className="syntax-blue">~</span> {item.cmd}</p><p className="term-result">{item.output}</p></div>)}<form className="terminal-input-line" onSubmit={(e) => { e.preventDefault(); runCommand(command) }}><span className="prompt-symbol">➜</span><span className="syntax-blue">~</span><input autoFocus value={command} onChange={(e) => setCommand(e.target.value)} placeholder={t('type a command…')} aria-label="Terminal command"/><span className="cursor"/></form></div><div className="terminal-modal-footer"><span>{t('Try:')} <button onClick={() => runCommand('skills')}>skills</button> <button onClick={() => runCommand('projects')}>projects</button> <button onClick={() => runCommand('contact')}>contact</button></span><span>{t('ESC / click outside to close')}</span></div></div></div>}
+    <section className="contact-section shell" id="contact"><div className="contact-panel"><div className="contact-orb"/>
+      <p className="overline">{t(ui.contactOverline)}</p>
+      <h2>{t(ui.contactHeading)}<br/><span>{t(ui.contactHeadingAccent)}</span></h2>
+      <p>{t(ui.contactBody)}</p>
+      <a className="button-primary contact-email" href={`mailto:${links.email}`}><Mail size={17}/> <span dir="ltr">{links.email}</span></a>
+      <div className="contact-links">
+        <a href={links.linkedin} {...ext}><Linkedin size={15}/> LinkedIn <ArrowUpRight size={12}/></a>
+        <a href={links.github} {...ext}><Github size={15}/> GitHub <ArrowUpRight size={12}/></a>
+        <a href={links.cv} download="Hamza-Khalem-CV.pdf"><Download size={15}/> {t(ui.downloadCv)}</a>
+      </div>
+    </div></section>
+
+    <footer className="footer shell"><a className="brand" href="#top" aria-label="Hamza Khalem"><span className="brand-mark">hk<span>.</span></span></a><span>{t(ui.footer)}</span><span>© {new Date().getFullYear()} Hamza Khalem</span></footer>
+
+    {terminalOpen && <div className="terminal-modal" role="dialog" aria-modal="true" aria-label={t(ui.terminal)} onMouseDown={(e) => { if (e.target === e.currentTarget) setTerminalOpen(false) }}><div className="terminal-dialog">
+      <div className="window-top"><div className="window-dots"><i/><i/><i/></div><span><Terminal size={13}/> interactive-terminal — bash</span><button onClick={() => setTerminalOpen(false)} aria-label="Close terminal"><X size={17}/></button></div>
+      <div className="modal-terminal-body">
+        <p className="terminal-muted">{t(ui.termWelcome)} <b>help</b> {t(ui.termStart)}</p>
+        {history.map((item, i) => <div className="term-example" key={`${item.cmd}-${i}`}><p><span className="prompt-symbol">➜</span> <span className="syntax-blue">~</span> {item.cmd}</p><p className="term-result">{item.output}</p></div>)}
+        <form className="terminal-input-line" onSubmit={(e) => { e.preventDefault(); runCommand(command) }}><span className="prompt-symbol">➜</span><span className="syntax-blue">~</span><input autoFocus value={command} onChange={(e) => setCommand(e.target.value)} placeholder={t(ui.termPlaceholder)} aria-label="Terminal command"/><span className="cursor"/></form>
+      </div>
+      <div className="terminal-modal-footer"><span>{t(ui.termTry)} <button onClick={() => runCommand('about')}>about</button> <button onClick={() => runCommand('skills')}>skills</button> <button onClick={() => runCommand('contact')}>contact</button></span><span>{t(ui.termClose)}</span></div>
+    </div></div>}
   </main>
 }
 
