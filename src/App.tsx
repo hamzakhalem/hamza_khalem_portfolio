@@ -126,7 +126,7 @@ function App({ initialLang, initialArticles }: Props) {
       </div>
       <aside className="hero-facts" aria-label={t(ui.atAGlance)}>
         <div className="window-top"><div className="window-dots"><i/><i/><i/></div><span>{t(ui.atAGlance)}</span></div>
-        <div className="facts-profile"><img src="/hamza-khalem.webp" alt={t(ui.photoAlt)} width={64} height={64} fetchPriority="high"/><div><strong>Hamza Khalem</strong><span>{t(ui.profileRole)}</span></div></div>
+        <div className="facts-profile"><img src="/hamza-khalem.webp" alt={t(ui.photoAlt)} width={64} height={64} fetchPriority="high"/><div><strong>{t(ui.profileName)}</strong><span>{t(ui.profileRole)}</span></div></div>
         <dl>{hero.facts.map((f) => <div key={f.label.en}><dt>{t(f.label)}</dt><dd>{t(f.value)}</dd></div>)}</dl>
       </aside>
       <button className="scroll-cue" onClick={() => scrollTo('experience')}><span>{t(ui.scroll)}</span><ArrowDownRight size={15}/></button>

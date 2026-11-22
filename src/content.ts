@@ -462,6 +462,7 @@ export const ui = {
   viewGithub: u('View GitHub', 'Voir GitHub', 'عرض GitHub'),
   contactMe: u('Contact me', 'Me contacter', 'تواصل معي'),
   atAGlance: u('AT A GLANCE', 'EN BREF', 'لمحة سريعة'),
+  profileName: u('Hamza Khalem', 'Hamza Khalem', 'حمزة خالم'),
   profileRole: u('Software Engineer · Full-stack & AI', 'Ingénieur logiciel · Full-stack et IA', 'مهندس برمجيات · تطوير متكامل وذكاء اصطناعي'),
   photoAlt: u('Portrait of Hamza Khalem', 'Portrait de Hamza Khalem', 'صورة حمزة خالم'),
   scroll: u('SCROLL TO EXPLORE', 'DÉFILER POUR EXPLORER', 'مرّر للاستكشاف'),
