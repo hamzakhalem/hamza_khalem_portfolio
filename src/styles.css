@@ -189,3 +189,12 @@ main[dir="rtl"] .hero-facts dt,main[dir="rtl"] .project-fields dt,main[dir="rtl"
 main[data-theme="light"] .about-photo{box-shadow:0 20px 50px #24304a1a}
 @media(max-width:950px){.facts-profile{padding:16px 16px 4px}}
 @media(max-width:700px){.about-photo{width:180px;margin-top:18px}}
+
+.art-shots{position:absolute;inset:50px 18px 0;display:flex;justify-content:center;align-items:flex-start;gap:14px;pointer-events:none}
+.art-shots img{width:calc(50% - 7px);max-width:200px;height:auto;border-radius:10px 10px 0 0;border:1px solid #ffffff1f;border-bottom:0;box-shadow:0 18px 45px #0008;transition:transform .35s}
+.art-shots img:nth-child(2){margin-top:34px}
+.project-card:hover .art-shots img:first-child{transform:translateY(-4px)}
+.project-card:hover .art-shots img:nth-child(2){transform:translateY(-8px)}
+.project-art.has-shots{min-height:260px}
+main[data-theme="light"] .art-shots img{border-color:#00000014;box-shadow:0 16px 40px #24304a26}
+@media(max-width:700px){.project-card.featured .project-art.has-shots{height:280px}.art-shots{inset:46px 14px 0}}

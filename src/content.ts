@@ -157,6 +157,8 @@ export type Project = {
   status?: Tx
   proprietary?: boolean
   featured?: boolean
+  // Real screenshots shown on the card instead of the abstract art. Files live in public/projects.
+  images?: { src: string; width: number; height: number; alt: Tx }[]
   links?: { label: Tx; href: string; kind?: 'github' | 'site' | 'download' }[]
 }
 
@@ -179,6 +181,10 @@ export const projects: Project[] = [
       ar: 'صمّمته وطوّرته بالكامل: طبقة نماذج لغوية مستقلة عن المزوّد (OpenAI وClaude وGemini وDeepSeek وOllama)، واستخراج النصوص من ملفات PDF وWord، واسترجاع المقاطع للمستندات الطويلة، وحدود استخدام لكل مستخدم، وتخزين مؤقت للإجابات.',
     },
     stack: ['PHP', 'JavaScript', 'LLM APIs', 'PHPUnit', 'Behat', 'Moodle 4.2+'],
+    images: [
+      { src: '/projects/aipdf-summary.webp', width: 440, height: 693, alt: { en: 'AI PDF Assistant summarising a course PDF inside Moodle', fr: 'AI PDF Assistant résumant un PDF de cours dans Moodle', ar: 'AI PDF Assistant يلخّص ملف PDF لمقرر داخل Moodle' } },
+      { src: '/projects/aipdf-quiz.webp', width: 440, height: 674, alt: { en: 'AI PDF Assistant generating a quiz from the document', fr: 'AI PDF Assistant générant un quiz à partir du document', ar: 'AI PDF Assistant يولّد اختباراً من المستند' } },
+    ],
     status: { en: 'Live on the Moodle marketplace · Open source · GPL v3', fr: 'Disponible sur le marketplace Moodle · Open source · GPL v3', ar: 'متاح على متجر Moodle الرسمي · مفتوح المصدر · GPL v3' },
     links: [
       { kind: 'site', label: { en: 'Moodle marketplace', fr: 'Marketplace Moodle', ar: 'متجر Moodle' }, href: 'https://marketplace.moodle.com/plugins/block_aipdfassistant' },

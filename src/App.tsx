@@ -146,7 +146,9 @@ function App({ initialLang, initialArticles }: Props) {
         <div className="project-filters"><button className={activeArea === 'all' ? 'filter active' : 'filter'} onClick={() => setActiveArea('all')}>{t(ui.allWork)}</button>{areas.map((a) => <button key={a.id} className={activeArea === a.id ? 'filter active' : 'filter'} onClick={() => setActiveArea(a.id)}>{a.id === 'software' ? t(ui.filterSoftware) : a.id === 'ai' ? 'AI' : 'EdTech & LMS'}</button>)}</div>
       </div>
       <div className="projects-grid">{visibleProjects.map((p, index) => <article className={p.featured ? 'project-card featured' : 'project-card'} key={p.title} style={{ animationDelay: `${index * 70}ms` }}>
-        <div className={`project-art art-${p.category}`}><span className="project-index">{String(projects.indexOf(p) + 1).padStart(2, '0')}</span>{p.featured && <span className="tag tag-featured"><Star size={11}/> {t(ui.featured)}</span>}<div className="art-decoration"><span/><span/><span/></div><span className="project-art-label">{artLabel(p.category)}</span></div>
+        <div className={`project-art art-${p.category}${p.images ? ' has-shots' : ''}`}><span className="project-index">{String(projects.indexOf(p) + 1).padStart(2, '0')}</span>{p.featured && <span className="tag tag-featured"><Star size={11}/> {t(ui.featured)}</span>}{p.images
+          ? <div className="art-shots">{p.images.map((img) => <img key={img.src} src={img.src} width={img.width} height={img.height} alt={t(img.alt)} loading="lazy" decoding="async"/>)}</div>
+          : <><div className="art-decoration"><span/><span/><span/></div><span className="project-art-label">{artLabel(p.category)}</span></>}</div>
         <div className="project-content">
           <p className="project-eyebrow">{t(p.eyebrow)}</p>
           <h3>{p.title}</h3>
