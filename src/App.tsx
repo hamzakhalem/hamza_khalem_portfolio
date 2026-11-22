@@ -126,6 +126,7 @@ function App({ initialLang, initialArticles }: Props) {
       </div>
       <aside className="hero-facts" aria-label={t(ui.atAGlance)}>
         <div className="window-top"><div className="window-dots"><i/><i/><i/></div><span>{t(ui.atAGlance)}</span></div>
+        <div className="facts-profile"><img src="/hamza-khalem.webp" alt={t(ui.photoAlt)} width={64} height={64} fetchPriority="high"/><div><strong>Hamza Khalem</strong><span>{t(ui.profileRole)}</span></div></div>
         <dl>{hero.facts.map((f) => <div key={f.label.en}><dt>{t(f.label)}</dt><dd>{t(f.value)}</dd></div>)}</dl>
       </aside>
       <button className="scroll-cue" onClick={() => scrollTo('experience')}><span>{t(ui.scroll)}</span><ArrowDownRight size={15}/></button>
@@ -201,7 +202,7 @@ function App({ initialLang, initialArticles }: Props) {
     </section>
 
     <section className="about-section shell" id="about">
-      <div className="about-label"><p className="overline">{t(ui.aboutOverline)}</p><div className="about-monogram" aria-hidden="true">H<span>K</span><i>.</i></div></div>
+      <div className="about-label"><p className="overline">{t(ui.aboutOverline)}</p><img className="about-photo" src="/hamza-khalem.webp" alt={t(ui.photoAlt)} width={640} height={640} loading="lazy"/></div>
       <div className="about-copy"><h2>{t(about.heading)}<br/><span>{t(about.headingAccent)}</span></h2><p>{t(about.body)}</p></div>
     </section>
 

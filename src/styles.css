@@ -179,3 +179,13 @@ main[data-theme="light"] .experience-section,main[data-theme="light"] .education
 main[data-theme="light"] .project-card.featured{border-color:#b8c1d7}
 main[dir="rtl"] .hero h1,main[dir="rtl"] .section-heading h2,main[dir="rtl"] .about-copy h2,main[dir="rtl"] .contact-panel h2{letter-spacing:0}
 main[dir="rtl"] .hero-facts dt,main[dir="rtl"] .project-fields dt,main[dir="rtl"] .edu-card h3{letter-spacing:0}
+
+.facts-profile{display:flex;align-items:center;gap:14px;padding:18px 22px 6px}
+.facts-profile img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);flex-shrink:0}
+.facts-profile div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.facts-profile strong{font:700 17px var(--display);letter-spacing:-.4px;color:var(--text)}
+.facts-profile span{font:10px var(--mono);letter-spacing:.4px;color:var(--muted)}
+.about-photo{display:block;width:min(100%,260px);height:auto;aspect-ratio:1;object-fit:cover;border-radius:14px;border:1px solid var(--line);margin-top:34px;box-shadow:0 24px 60px #0006}
+main[data-theme="light"] .about-photo{box-shadow:0 20px 50px #24304a1a}
+@media(max-width:950px){.facts-profile{padding:16px 16px 4px}}
+@media(max-width:700px){.about-photo{width:180px;margin-top:18px}}
