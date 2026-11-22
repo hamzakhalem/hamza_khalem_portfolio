@@ -310,6 +310,10 @@ export const projects: Project[] = [
       ar: 'طوّرته بالكامل: واجهة Django REST API تستورد مجلدات Drive بشكل متكرر وتربطها بالسنة والشعبة والتخصص والمادة، وواجهة React + TypeScript تدعم الاتجاه من اليمين إلى اليسار والوضع الداكن والبحث والمفضلة وقارئ PDF مدمجاً.',
     },
     stack: ['Django REST Framework', 'React', 'TypeScript', 'PostgreSQL', 'Google Drive API'],
+    images: [
+      { src: '/projects/lecours-subjects.webp', width: 960, height: 570, alt: { en: 'L-E-COURS in dark mode: content sources and the subjects of a speciality', fr: 'L-E-COURS en mode sombre : sources de contenu et matières d’une spécialité', ar: 'L-E-COURS بالوضع الداكن: مصادر المحتوى ومواد أحد التخصصات' } },
+      { src: '/projects/lecours-files-light.webp', width: 960, height: 570, alt: { en: 'L-E-COURS in light mode: course files with favourites and the in-app reader', fr: 'L-E-COURS en mode clair : fichiers de cours avec favoris et lecteur intégré', ar: 'L-E-COURS بالوضع الفاتح: ملفات المقرر مع المفضلة والقارئ المدمج' } },
+    ],
     status: { en: 'Open source · v1.5, v1.6 in progress', fr: 'Open source · v1.5, v1.6 en cours', ar: 'مفتوح المصدر · الإصدار 1.5، و1.6 قيد التطوير' },
     links: [{ label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/l-e-cours' }],
   },
