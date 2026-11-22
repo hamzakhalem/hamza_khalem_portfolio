@@ -198,3 +198,9 @@ main[data-theme="light"] .about-photo{box-shadow:0 20px 50px #24304a1a}
 .project-art.has-shots{min-height:260px}
 main[data-theme="light"] .art-shots img{border-color:#00000014;box-shadow:0 16px 40px #24304a26}
 @media(max-width:700px){.project-card.featured .project-art.has-shots{height:280px}.art-shots{inset:46px 14px 0}}
+
+.art-shots.landscape{inset:52px 18px 18px;display:block}
+.art-shots.landscape img{position:absolute;width:84%;max-width:none;margin:0;border-radius:8px;border-bottom:1px solid #ffffff1f}
+.art-shots.landscape img:first-child{top:0;inset-inline-start:0}
+.art-shots.landscape img:nth-child(2){bottom:0;inset-inline-end:0}
+main[data-theme="light"] .art-shots.landscape img{border-bottom-color:#00000014}
