@@ -157,7 +157,7 @@ export type Project = {
   status?: Tx
   proprietary?: boolean
   featured?: boolean
-  links?: { label: Tx; href: string; kind?: 'github' | 'site' }[]
+  links?: { label: Tx; href: string; kind?: 'github' | 'site' | 'download' }[]
 }
 
 const naseejNote = { en: 'Naseej e-learning platform', fr: 'plateforme e-learning de Naseej', ar: 'منصة التعليم الإلكتروني لدى Naseej' }
@@ -179,8 +179,12 @@ export const projects: Project[] = [
       ar: 'صمّمته وطوّرته بالكامل: طبقة نماذج لغوية مستقلة عن المزوّد (OpenAI وClaude وGemini وDeepSeek وOllama)، واستخراج النصوص من ملفات PDF وWord، واسترجاع المقاطع للمستندات الطويلة، وحدود استخدام لكل مستخدم، وتخزين مؤقت للإجابات.',
     },
     stack: ['PHP', 'JavaScript', 'LLM APIs', 'PHPUnit', 'Behat', 'Moodle 4.2+'],
-    status: { en: 'Open source · GPL v3', fr: 'Open source · GPL v3', ar: 'مفتوح المصدر · GPL v3' },
-    links: [{ label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/moodle-block_aipdfassistant' }],
+    status: { en: 'Live on the Moodle marketplace · Open source · GPL v3', fr: 'Disponible sur le marketplace Moodle · Open source · GPL v3', ar: 'متاح على متجر Moodle الرسمي · مفتوح المصدر · GPL v3' },
+    links: [
+      { kind: 'site', label: { en: 'Moodle marketplace', fr: 'Marketplace Moodle', ar: 'متجر Moodle' }, href: 'https://marketplace.moodle.com/plugins/block_aipdfassistant' },
+      { kind: 'download', label: { en: 'Download v0.1.1', fr: 'Télécharger v0.1.1', ar: 'تنزيل v0.1.1' }, href: 'https://github.com/hamzakhalem/moodle-block_aipdfassistant/releases/tag/v0.1.1' },
+      { label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/moodle-block_aipdfassistant' },
+    ],
   },
   {
     title: 'Medad / TVTC Platform',
@@ -338,22 +342,22 @@ export const projects: Project[] = [
     links: [{ label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/cookingapp' }],
   },
   {
-    title: 'HRMS',
+    title: 'WZR Quiz',
     category: 'software',
-    eyebrow: { en: 'WEB APPLICATION', fr: 'APPLICATION WEB', ar: 'تطبيق ويب' },
+    eyebrow: { en: 'MOBILE APP', fr: 'APPLICATION MOBILE', ar: 'تطبيق هاتف' },
     context: {
-      en: 'Human resources management system built with Laravel.',
-      fr: 'Système de gestion des ressources humaines développé avec Laravel.',
-      ar: 'نظام لإدارة الموارد البشرية مبني بإطار Laravel.',
+      en: 'Light-hearted Arabic trivia app for Android and iOS with an Algerian flavour: six categories, one right answer and a few deliberately funny wrong ones.',
+      fr: 'Application de quiz en arabe, pleine d’humour et à saveur algérienne, pour Android et iOS : six catégories, une bonne réponse et quelques mauvaises volontairement drôles.',
+      ar: 'تطبيق أسئلة ثقافية بالعربية بنكهة جزائرية وروح مرحة لأندرويد وiOS: ست فئات، وإجابة صحيحة واحدة مع إجابات خاطئة مضحكة عن قصد.',
     },
     role: {
-      en: 'I built the application foundation: admin authentication, a dashboard and admin panel settings, with server-rendered Blade views.',
-      fr: 'J’ai développé le socle de l’application : authentification administrateur, tableau de bord et paramètres du panneau d’administration, avec des vues Blade.',
-      ar: 'بنيت أساس التطبيق: مصادقة المسؤولين ولوحة التحكم وإعدادات لوحة الإدارة، مع واجهات Blade.',
+      en: 'I built the React Native app: category grid, answer checking with random reaction images, a score screen, and progress saved on the device with SQLite so players pick up where they left off.',
+      fr: 'J’ai développé l’application React Native : grille de catégories, vérification des réponses avec images de réaction aléatoires, écran de score, et progression enregistrée sur l’appareil avec SQLite pour reprendre là où l’on s’est arrêté.',
+      ar: 'طوّرت تطبيق React Native: شبكة الفئات، والتحقق من الإجابات مع صور تفاعل عشوائية، وشاشة النتيجة، وحفظ التقدّم على الجهاز باستخدام SQLite لمتابعة الاختبار من حيث توقف المستخدم.',
     },
-    stack: ['PHP', 'Laravel', 'Blade', 'JavaScript'],
+    stack: ['React Native', 'JavaScript', 'SQLite', 'Android', 'iOS'],
     status: { en: 'Open source', fr: 'Open source', ar: 'مفتوح المصدر' },
-    links: [{ label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/hrms_laravel_php' }],
+    links: [{ label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/quiz-app' }],
   },
 ]
 
@@ -410,8 +414,8 @@ export const repos: { name: string; url: string; tech: string; description: Tx }
     description: { en: 'Arabic-first academic library that organises university course files imported from Google Drive into one public catalogue.', fr: 'Bibliothèque universitaire pensée d’abord en arabe, qui regroupe dans un catalogue public les fichiers de cours importés depuis Google Drive.', ar: 'مكتبة جامعية عربية أولاً تنظّم ملفات المقررات المستوردة من Google Drive في فهرس عام واحد.' },
   },
   {
-    name: 'hrms_laravel_php', url: 'https://github.com/hamzakhalem/hrms_laravel_php', tech: 'PHP · Laravel',
-    description: { en: 'Human resources management system built with PHP and the Laravel framework.', fr: 'Système de gestion des ressources humaines développé avec PHP et Laravel.', ar: 'نظام لإدارة الموارد البشرية مبني بلغة PHP وإطار Laravel.' },
+    name: 'quiz-app', url: 'https://github.com/hamzakhalem/quiz-app', tech: 'React Native · SQLite',
+    description: { en: 'Arabic trivia app for Android and iOS with six categories, reaction images and progress saved on the device.', fr: 'Application de quiz en arabe pour Android et iOS : six catégories, images de réaction et progression enregistrée sur l’appareil.', ar: 'تطبيق أسئلة ثقافية بالعربية لأندرويد وiOS بست فئات وصور تفاعل وحفظ التقدّم على الجهاز.' },
   },
 ]
 

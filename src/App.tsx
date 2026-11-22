@@ -157,7 +157,7 @@ function App({ initialLang, initialArticles }: Props) {
             {p.result && <div className="project-outcome"><dt>{t(ui.result)}</dt><dd>{t(p.result)}</dd></div>}
             {p.status && <div className="project-outcome"><dt>{t(ui.status)}</dt><dd>{t(p.status)}</dd></div>}
           </dl>
-          {p.links && <div className="project-links">{p.links.map((l) => <a key={l.href} href={l.href} {...ext}>{l.kind === 'site' ? <Globe size={14}/> : <Github size={14}/>} {t(l.label)} <ArrowUpRight size={13}/></a>)}</div>}
+          {p.links && <div className="project-links">{p.links.map((l) => <a key={l.href} href={l.href} {...ext}>{l.kind === 'site' ? <Globe size={14}/> : l.kind === 'download' ? <Download size={14}/> : <Github size={14}/>} {t(l.label)} <ArrowUpRight size={13}/></a>)}</div>}
         </div>
       </article>)}</div>
     </section>
