@@ -18,7 +18,7 @@ export function headTags(lang: Lang): string {
     jobTitle: 'Software Engineer',
     knowsAbout: ['Software engineering', 'Web development', 'REST APIs', 'LLM integrations', 'Python', 'PHP', 'React'],
     url: pageUrl('en'),
-    image,
+    image: `${SITE_URL}/hamza-khalem.webp`,
     email: `mailto:${links.email}`,
     sameAs: [links.linkedin, links.github, links.medium],
     address: { '@type': 'PostalAddress', addressLocality: 'Algiers', addressCountry: 'DZ' },
