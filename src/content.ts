@@ -200,9 +200,9 @@ export const projects: Project[] = [
     proprietary: true,
     eyebrow: { en: 'HIGH-TRAFFIC PLATFORM', fr: 'PLATEFORME À FORT TRAFIC', ar: 'منصة عالية الحركة' },
     context: {
-      en: 'E-learning platform serving 300k users, 25k concurrent.',
-      fr: 'Plateforme e-learning servant 300 000 utilisateurs, dont 25 000 simultanés.',
-      ar: 'منصة تعليم إلكتروني تخدم 300 ألف مستخدم، منهم 25 ألفاً بشكل متزامن.',
+      en: 'E-learning platform serving 300k users, 25k concurrent. It also runs client academies such as ARUC Academy, Al Fozan Academy, the Financial Academy and the Royal Institute of Traditional Arts.',
+      fr: 'Plateforme e-learning servant 300 000 utilisateurs, dont 25 000 simultanés. Elle fait aussi tourner des académies clientes comme ARUC Academy, Al Fozan Academy, la Financial Academy et le Royal Institute of Traditional Arts.',
+      ar: 'منصة تعليم إلكتروني تخدم 300 ألف مستخدم، منهم 25 ألفاً بشكل متزامن. وتشغّل أيضاً أكاديميات لعملاء مثل أكاديمية الفهرس العربي الموحد وأكاديمية الفوزان والأكاديمية المالية والمعهد الملكي للفنون التقليدية.',
     },
     role: {
       en: 'I built platform features and modules for authentication, enrolment, messaging, reporting and file repositories, extended the platform core, and optimised database queries and caching under load.',
@@ -210,6 +210,16 @@ export const projects: Project[] = [
       ar: 'طوّرت ميزات ووحدات للمصادقة والتسجيل والمراسلة والتقارير ومستودعات الملفات، ووسّعت نواة المنصة، وحسّنت استعلامات قاعدة البيانات والتخزين المؤقت تحت الضغط.',
     },
     stack: ['PHP 8.1', 'PostgreSQL', 'Docker', 'Moodle'],
+    images: [
+      { src: '/projects/medad-aruc-home.webp', width: 1600, height: 658, alt: { en: 'ARUC Academy home page', fr: 'Page d’accueil d’ARUC Academy', ar: 'الصفحة الرئيسية لأكاديمية الفهرس العربي الموحد' } },
+      { src: '/projects/medad-wrth-login.webp', width: 1600, height: 788, alt: { en: 'Royal Institute of Traditional Arts sign-in page with OpenID Connect', fr: 'Page de connexion du Royal Institute of Traditional Arts avec OpenID Connect', ar: 'صفحة تسجيل الدخول للمعهد الملكي للفنون التقليدية مع OpenID Connect' } },
+      { src: '/projects/medad-alfozan-home.webp', width: 1160, height: 788, alt: { en: 'Al Fozan Academy home page: accomplishments and photo gallery', fr: 'Page d’accueil d’Al Fozan Academy : chiffres clés et galerie photo', ar: 'الصفحة الرئيسية لأكاديمية الفوزان: الإنجازات ومعرض الصور' } },
+      { src: '/projects/medad-aruc-categories.webp', width: 1600, height: 1000, alt: { en: 'ARUC Academy courses by subject area', fr: 'Cours d’ARUC Academy par domaine', ar: 'دورات أكاديمية الفهرس العربي الموحد حسب القطاعات الموضوعية' } },
+      { src: '/projects/medad-aruc-courses.webp', width: 1600, height: 752, alt: { en: 'ARUC Academy most requested self-paced courses, with prices', fr: 'Cours en autonomie les plus demandés d’ARUC Academy, avec leurs prix', ar: 'دورات التعلم الذاتي الأكثر طلباً في أكاديمية الفهرس العربي الموحد مع أسعارها' } },
+      { src: '/projects/medad-finacademy-report.webp', width: 1600, height: 1190, alt: { en: 'Financial Academy report builder: choosing and ordering report columns', fr: 'Générateur de rapports de la Financial Academy : choix et ordre des colonnes', ar: 'منشئ التقارير في الأكاديمية المالية: اختيار أعمدة التقرير وترتيبها' } },
+      { src: '/projects/medad-aruc-course.webp', width: 1600, height: 952, alt: { en: 'ARUC Academy course page with paid enrolment', fr: 'Page de cours d’ARUC Academy avec inscription payante', ar: 'صفحة مقرر في أكاديمية الفهرس العربي الموحد مع التسجيل المدفوع' } },
+      { src: '/projects/medad-aruc-numbers.webp', width: 1600, height: 658, alt: { en: 'ARUC Academy in numbers: 75,000 trainees, 650 courses, 20 countries', fr: 'ARUC Academy en chiffres : 75 000 stagiaires, 650 cours, 20 pays', ar: 'أكاديمية الفهرس العربي الموحد في أرقام: 75 ألف متدرب و650 دورة و20 دولة' } },
+    ],
   },
   {
     title: 'Platform API & Integrations',
