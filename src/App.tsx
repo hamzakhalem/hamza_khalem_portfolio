@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, BookOpen, ChevronRight, Code2, Download, Github, Globe, Linkedin, Lock, Mail, Menu, Star, Terminal, X } from 'lucide-react'
-import { about, areas, education, experience, hero, langPath, links, meta, projects, repos, ui, type Area, type Lang, type Tx } from './content'
+import { ArrowDownRight, ArrowUpRight, BookOpen, ChevronLeft, ChevronRight, Code2, Download, Github, Globe, Images, Linkedin, Lock, Mail, Menu, Star, Terminal, X } from 'lucide-react'
+import { about, areas, education, experience, hero, langPath, links, meta, projects, repos, ui, type Area, type Lang, type Project, type Tx } from './content'
 import { fetchArticles, type Article } from './articles'
 
 type ContributionDay = { date: string; count: number; level: number }
@@ -21,6 +21,7 @@ function App({ initialLang, initialArticles }: Props) {
   const [articles, setArticles] = useState<Article[]>(initialArticles)
   const [articleState, setArticleState] = useState<'loading' | 'ready' | 'error'>(initialArticles.length ? 'ready' : 'loading')
   const [mobileMenu, setMobileMenu] = useState(false)
+  const [gallery, setGallery] = useState<{ project: Project; index: number } | null>(null)
   const t = (v: Tx) => v[lang]
 
   const setLang = (next: Lang) => {
@@ -71,6 +72,21 @@ function App({ initialLang, initialArticles }: Props) {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [terminalOpen])
+
+  // Screenshot viewer: Escape closes, arrow keys move (mirrored in Arabic).
+  const stepGallery = (delta: number) => setGallery((g) => g && { ...g, index: (g.index + delta + (g.project.images?.length ?? 1)) % (g.project.images?.length ?? 1) })
+  useEffect(() => {
+    if (!gallery) return
+    const rtl = lang === 'ar'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setGallery(null)
+      else if (e.key === 'ArrowRight') stepGallery(rtl ? -1 : 1)
+      else if (e.key === 'ArrowLeft') stepGallery(rtl ? 1 : -1)
+    }
+    window.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = '' }
+  }, [gallery !== null, lang])
 
   const visibleProjects = useMemo(() => activeArea === 'all' ? projects : projects.filter((p) => p.category === activeArea), [activeArea])
   const dateFmt = (d: Date) => new Intl.DateTimeFormat(lang === 'ar' ? 'ar-DZ' : lang, { dateStyle: 'medium' }).format(d)
@@ -147,7 +163,7 @@ function App({ initialLang, initialArticles }: Props) {
       </div>
       <div className="projects-grid">{visibleProjects.map((p, index) => <article className={p.featured ? 'project-card featured' : 'project-card'} key={p.title} style={{ animationDelay: `${index * 70}ms` }}>
         <div className={`project-art art-${p.category}${p.images ? ' has-shots' : ''}`}><span className="project-index">{String(projects.indexOf(p) + 1).padStart(2, '0')}</span>{p.featured && <span className="tag tag-featured"><Star size={11}/> {t(ui.featured)}</span>}{p.images
-          ? <div className={p.images.every((img) => img.width > img.height) ? 'art-shots landscape' : 'art-shots'}>{p.images.map((img) => <img key={img.src} src={img.src} width={img.width} height={img.height} alt={t(img.alt)} loading="lazy" decoding="async"/>)}</div>
+          ? <button type="button" className={p.images.slice(0, 2).every((img) => img.width > img.height) ? 'art-shots landscape' : 'art-shots'} onClick={() => setGallery({ project: p, index: 0 })} aria-label={`${t(ui.viewScreenshots)}: ${p.title}`}>{p.images.slice(0, 2).map((img) => <img key={img.src} src={img.src} width={img.width} height={img.height} alt={t(img.alt)} loading="lazy" decoding="async"/>)}<span className="shots-hint"><Images size={12}/> {p.images.length}</span></button>
           : <><div className="art-decoration"><span/><span/><span/></div><span className="project-art-label">{artLabel(p.category)}</span></>}</div>
         <div className="project-content">
           <p className="project-eyebrow">{t(p.eyebrow)}</p>
@@ -231,6 +247,13 @@ function App({ initialLang, initialArticles }: Props) {
       </div>
       <div className="terminal-modal-footer"><span>{t(ui.termTry)} <button onClick={() => runCommand('about')}>about</button> <button onClick={() => runCommand('skills')}>skills</button> <button onClick={() => runCommand('contact')}>contact</button></span><span>{t(ui.termClose)}</span></div>
     </div></div>}
+
+    {gallery && gallery.project.images && (() => { const imgs = gallery.project.images; const img = imgs[gallery.index]; let swipeX = 0; return <div className="gallery-modal" role="dialog" aria-modal="true" aria-label={`${t(ui.viewScreenshots)}: ${gallery.project.title}`} onMouseDown={(e) => { if (e.target === e.currentTarget) setGallery(null) }}>
+      <div className="gallery-top"><span>{gallery.project.title}</span><span className="gallery-count" dir="ltr">{gallery.index + 1} / {imgs.length}</span><button onClick={() => setGallery(null)} aria-label={t(ui.close)} autoFocus><X size={18}/></button></div>
+      <figure className="gallery-figure" onMouseDown={(e) => { if (e.target === e.currentTarget) setGallery(null) }} onTouchStart={(e) => { swipeX = e.touches[0].clientX }} onTouchEnd={(e) => { const dx = e.changedTouches[0].clientX - swipeX; if (Math.abs(dx) > 50) stepGallery((dx < 0 ? 1 : -1) * (lang === 'ar' ? -1 : 1)) }}><img key={img.src} src={img.src} width={img.width} height={img.height} alt={t(img.alt)}/><figcaption>{t(img.alt)}</figcaption></figure>
+      {imgs.length > 1 && <><button className="gallery-nav gallery-prev" onClick={() => stepGallery(-1)} aria-label={t(ui.previous)}><ChevronLeft size={22}/></button><button className="gallery-nav gallery-next" onClick={() => stepGallery(1)} aria-label={t(ui.next)}><ChevronRight size={22}/></button></>}
+      {imgs.length > 1 && <div className="gallery-thumbs">{imgs.map((im, i) => <button key={im.src} className={i === gallery.index ? 'active' : ''} onClick={() => setGallery({ ...gallery, index: i })} aria-label={t(im.alt)}><img src={im.src} alt="" loading="lazy"/></button>)}</div>}
+    </div> })()}
   </main>
 }
 
