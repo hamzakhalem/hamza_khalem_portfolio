@@ -297,7 +297,7 @@ export const projects: Project[] = [
     links: [{ kind: 'site', label: { en: 'Visit site', fr: 'Voir le site', ar: 'زيارة الموقع' }, href: 'https://aymenpromotion-dz.com/' }],
   },
   {
-    title: 'L-E-COURS',
+    title: 'lecours',
     category: 'lms',
     featured: true,
     eyebrow: { en: 'OPEN-SOURCE FULL-STACK PRODUCT', fr: 'PRODUIT FULL-STACK OPEN SOURCE', ar: 'منتج متكامل مفتوح المصدر' },
@@ -313,13 +313,16 @@ export const projects: Project[] = [
     },
     stack: ['Django REST Framework', 'React', 'TypeScript', 'PostgreSQL', 'Google Drive API'],
     images: [
-      { src: '/projects/lecours-subjects.webp', width: 1600, height: 950, alt: { en: 'L-E-COURS in dark mode: content sources and the subjects of a speciality', fr: 'L-E-COURS en mode sombre : sources de contenu et matières d’une spécialité', ar: 'L-E-COURS بالوضع الداكن: مصادر المحتوى ومواد أحد التخصصات' } },
-      { src: '/projects/lecours-files-light.webp', width: 1600, height: 950, alt: { en: 'L-E-COURS in light mode: course files with favourites and the in-app reader', fr: 'L-E-COURS en mode clair : fichiers de cours avec favoris et lecteur intégré', ar: 'L-E-COURS بالوضع الفاتح: ملفات المقرر مع المفضلة والقارئ المدمج' } },
-      { src: '/projects/lecours-home.webp', width: 1600, height: 950, alt: { en: 'L-E-COURS home page: search and browse by year, branch and speciality', fr: 'Accueil de L-E-COURS : recherche et navigation par année, filière et spécialité', ar: 'الصفحة الرئيسية لـ L-E-COURS: البحث والتصفح حسب السنة والشعبة والتخصص' } },
-      { src: '/projects/lecours-files-dark.webp', width: 1600, height: 950, alt: { en: 'L-E-COURS in dark mode: the course files of a subject', fr: 'L-E-COURS en mode sombre : les fichiers de cours d’une matière', ar: 'L-E-COURS بالوضع الداكن: ملفات مقرر إحدى المواد' } },
+      { src: '/projects/lecours-subjects.webp', width: 1600, height: 950, alt: { en: 'lecours in dark mode: content sources and the subjects of a speciality', fr: 'lecours en mode sombre : sources de contenu et matières d’une spécialité', ar: 'lecours بالوضع الداكن: مصادر المحتوى ومواد أحد التخصصات' } },
+      { src: '/projects/lecours-files-light.webp', width: 1600, height: 950, alt: { en: 'lecours in light mode: course files with favourites and the in-app reader', fr: 'lecours en mode clair : fichiers de cours avec favoris et lecteur intégré', ar: 'lecours بالوضع الفاتح: ملفات المقرر مع المفضلة والقارئ المدمج' } },
+      { src: '/projects/lecours-home.webp', width: 1600, height: 950, alt: { en: 'lecours home page: search and browse by year, branch and speciality', fr: 'Accueil de lecours : recherche et navigation par année, filière et spécialité', ar: 'الصفحة الرئيسية لـ lecours: البحث والتصفح حسب السنة والشعبة والتخصص' } },
+      { src: '/projects/lecours-files-dark.webp', width: 1600, height: 950, alt: { en: 'lecours in dark mode: the course files of a subject', fr: 'lecours en mode sombre : les fichiers de cours d’une matière', ar: 'lecours بالوضع الداكن: ملفات مقرر إحدى المواد' } },
     ],
-    status: { en: 'Open source · v1.5, v1.6 in progress', fr: 'Open source · v1.5, v1.6 en cours', ar: 'مفتوح المصدر · الإصدار 1.5، و1.6 قيد التطوير' },
-    links: [{ label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/l-e-cours' }],
+    status: { en: 'Live at lecours.pages.dev · Open source · v1.6 in progress', fr: 'En ligne sur lecours.pages.dev · Open source · v1.6 en cours', ar: 'متاح على lecours.pages.dev · مفتوح المصدر · الإصدار 1.6 قيد التطوير' },
+    links: [
+      { label: { en: 'Open lecours', fr: 'Ouvrir lecours', ar: 'فتح lecours' }, href: 'https://lecours.pages.dev', kind: 'site' },
+      { label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/l-e-cours' },
+    ],
   },
   {
     title: 'BEA & Samsung Algeria Websites',
