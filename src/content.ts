@@ -294,6 +294,10 @@ export const projects: Project[] = [
       ar: 'كنت المطوّر الرئيسي ضمن فريق صغير، وبنينا الموقع بواجهة خلفية Django وواجهة أمامية React.',
     },
     stack: ['Django', 'Python', 'React'],
+    images: [
+      { src: '/projects/aymen-projects-2022.webp', width: 1600, height: 883, alt: { en: 'Aymen Promotion website in 2022: residences under construction', fr: 'Site d’Aymen Promotion en 2022 : résidences en cours de réalisation', ar: 'موقع Aymen Promotion سنة 2022: الإقامات قيد الإنجاز' } },
+      { src: '/projects/aymen-finished-2022.webp', width: 1600, height: 950, alt: { en: 'Aymen Promotion website in 2022: finished projects with a residence slider', fr: 'Site d’Aymen Promotion en 2022 : projets livrés avec un carrousel de résidences', ar: 'موقع Aymen Promotion سنة 2022: المشاريع المنجزة مع عرض متحرك للإقامات' } },
+    ],
     links: [{ kind: 'site', label: { en: 'Visit site', fr: 'Voir le site', ar: 'زيارة الموقع' }, href: 'https://aymenpromotion-dz.com/' }],
   },
   {
