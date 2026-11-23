@@ -220,7 +220,7 @@ function App({ initialLang, initialArticles }: Props) {
     </section>
 
     <section className="about-section shell" id="about">
-      <div className="about-label"><p className="overline">{t(ui.aboutOverline)}</p><img className="about-photo" src="/hamza-khalem.webp" alt={t(ui.photoAlt)} width={640} height={640} loading="lazy"/></div>
+      <div className="about-label"><p className="overline">{t(ui.aboutOverline)}</p></div>
       <div className="about-copy"><h2>{t(about.heading)}<br/><span>{t(about.headingAccent)}</span></h2><p>{t(about.body)}</p></div>
     </section>
 
