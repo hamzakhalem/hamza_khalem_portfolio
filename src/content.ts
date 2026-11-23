@@ -157,7 +157,7 @@ export type Project = {
   status?: Tx
   proprietary?: boolean
   featured?: boolean
-  // Real screenshots shown on the card instead of the abstract art. Files live in public/projects.
+  // Real screenshots. The card shows the first two; clicking opens all of them. Files live in public/projects.
   images?: { src: string; width: number; height: number; alt: Tx }[]
   links?: { label: Tx; href: string; kind?: 'github' | 'site' | 'download' }[]
 }
@@ -182,8 +182,10 @@ export const projects: Project[] = [
     },
     stack: ['PHP', 'JavaScript', 'LLM APIs', 'PHPUnit', 'Behat', 'Moodle 4.2+'],
     images: [
-      { src: '/projects/aipdf-summary.webp', width: 440, height: 693, alt: { en: 'AI PDF Assistant summarising a course PDF inside Moodle', fr: 'AI PDF Assistant résumant un PDF de cours dans Moodle', ar: 'AI PDF Assistant يلخّص ملف PDF لمقرر داخل Moodle' } },
-      { src: '/projects/aipdf-quiz.webp', width: 440, height: 674, alt: { en: 'AI PDF Assistant generating a quiz from the document', fr: 'AI PDF Assistant générant un quiz à partir du document', ar: 'AI PDF Assistant يولّد اختباراً من المستند' } },
+      { src: '/projects/aipdf-summary.webp', width: 700, height: 1103, alt: { en: 'AI PDF Assistant summarising a course PDF inside Moodle', fr: 'AI PDF Assistant résumant un PDF de cours dans Moodle', ar: 'AI PDF Assistant يلخّص ملف PDF لمقرر داخل Moodle' } },
+      { src: '/projects/aipdf-quiz.webp', width: 700, height: 1073, alt: { en: 'AI PDF Assistant generating a quiz from the document', fr: 'AI PDF Assistant générant un quiz à partir du document', ar: 'AI PDF Assistant يولّد اختباراً من المستند' } },
+      { src: '/projects/aipdf-translate.webp', width: 700, height: 1073, alt: { en: 'AI PDF Assistant translating its answer into French', fr: 'AI PDF Assistant traduisant sa réponse en français', ar: 'AI PDF Assistant يترجم إجابته إلى الفرنسية' } },
+      { src: '/projects/aipdf-arabic.webp', width: 700, height: 1073, alt: { en: 'AI PDF Assistant in Arabic, right to left, explaining the lesson in Algerian Darija', fr: 'AI PDF Assistant en arabe, de droite à gauche, expliquant la leçon en darija algérienne', ar: 'AI PDF Assistant بالعربية من اليمين إلى اليسار، يشرح الدرس بالدارجة الجزائرية' } },
     ],
     status: { en: 'Live on the Moodle marketplace · Open source · GPL v3', fr: 'Disponible sur le marketplace Moodle · Open source · GPL v3', ar: 'متاح على متجر Moodle الرسمي · مفتوح المصدر · GPL v3' },
     links: [
@@ -295,7 +297,7 @@ export const projects: Project[] = [
     links: [{ kind: 'site', label: { en: 'Visit site', fr: 'Voir le site', ar: 'زيارة الموقع' }, href: 'https://aymenpromotion-dz.com/' }],
   },
   {
-    title: 'L-E-COURS',
+    title: 'lecours',
     category: 'lms',
     featured: true,
     eyebrow: { en: 'OPEN-SOURCE FULL-STACK PRODUCT', fr: 'PRODUIT FULL-STACK OPEN SOURCE', ar: 'منتج متكامل مفتوح المصدر' },
@@ -311,11 +313,16 @@ export const projects: Project[] = [
     },
     stack: ['Django REST Framework', 'React', 'TypeScript', 'PostgreSQL', 'Google Drive API'],
     images: [
-      { src: '/projects/lecours-subjects.webp', width: 960, height: 570, alt: { en: 'L-E-COURS in dark mode: content sources and the subjects of a speciality', fr: 'L-E-COURS en mode sombre : sources de contenu et matières d’une spécialité', ar: 'L-E-COURS بالوضع الداكن: مصادر المحتوى ومواد أحد التخصصات' } },
-      { src: '/projects/lecours-files-light.webp', width: 960, height: 570, alt: { en: 'L-E-COURS in light mode: course files with favourites and the in-app reader', fr: 'L-E-COURS en mode clair : fichiers de cours avec favoris et lecteur intégré', ar: 'L-E-COURS بالوضع الفاتح: ملفات المقرر مع المفضلة والقارئ المدمج' } },
+      { src: '/projects/lecours-subjects.webp', width: 1600, height: 950, alt: { en: 'lecours in dark mode: content sources and the subjects of a speciality', fr: 'lecours en mode sombre : sources de contenu et matières d’une spécialité', ar: 'lecours بالوضع الداكن: مصادر المحتوى ومواد أحد التخصصات' } },
+      { src: '/projects/lecours-files-light.webp', width: 1600, height: 950, alt: { en: 'lecours in light mode: course files with favourites and the in-app reader', fr: 'lecours en mode clair : fichiers de cours avec favoris et lecteur intégré', ar: 'lecours بالوضع الفاتح: ملفات المقرر مع المفضلة والقارئ المدمج' } },
+      { src: '/projects/lecours-home.webp', width: 1600, height: 950, alt: { en: 'lecours home page: search and browse by year, branch and speciality', fr: 'Accueil de lecours : recherche et navigation par année, filière et spécialité', ar: 'الصفحة الرئيسية لـ lecours: البحث والتصفح حسب السنة والشعبة والتخصص' } },
+      { src: '/projects/lecours-files-dark.webp', width: 1600, height: 950, alt: { en: 'lecours in dark mode: the course files of a subject', fr: 'lecours en mode sombre : les fichiers de cours d’une matière', ar: 'lecours بالوضع الداكن: ملفات مقرر إحدى المواد' } },
     ],
-    status: { en: 'Open source · v1.5, v1.6 in progress', fr: 'Open source · v1.5, v1.6 en cours', ar: 'مفتوح المصدر · الإصدار 1.5، و1.6 قيد التطوير' },
-    links: [{ label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/l-e-cours' }],
+    status: { en: 'Live at lecours.pages.dev · Open source · v1.6 in progress', fr: 'En ligne sur lecours.pages.dev · Open source · v1.6 en cours', ar: 'متاح على lecours.pages.dev · مفتوح المصدر · الإصدار 1.6 قيد التطوير' },
+    links: [
+      { label: { en: 'Open lecours', fr: 'Ouvrir lecours', ar: 'فتح lecours' }, href: 'https://lecours.pages.dev', kind: 'site' },
+      { label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/l-e-cours' },
+    ],
   },
   {
     title: 'BEA & Samsung Algeria Websites',
@@ -343,13 +350,19 @@ export const projects: Project[] = [
       ar: 'تطبيق وصفات متعدد المنصات: اختر المكوّنات المتوفرة لديك واكتشف الأطباق التي يمكنك طهيها بها.',
     },
     role: {
-      en: 'I built the React Native app: a categorised ingredient selector with icons, recipe discovery from the selected ingredients, English and French localisation, and dark mode.',
-      fr: 'J’ai développé l’application React Native : sélecteur d’ingrédients par catégories avec icônes, découverte de recettes selon les ingrédients choisis, traduction anglais/français et mode sombre.',
-      ar: 'طوّرت تطبيق React Native: اختيار المكوّنات حسب الفئات مع أيقونات، واكتشاف الوصفات انطلاقاً من المكوّنات المختارة، ودعم الإنجليزية والفرنسية، والوضع الداكن.',
+      en: 'I built the React Native app: a categorised ingredient selector with icons, recipe discovery from the selected ingredients, English, French and Arabic localisation, and dark mode.',
+      fr: 'J’ai développé l’application React Native : sélecteur d’ingrédients par catégories avec icônes, découverte de recettes selon les ingrédients choisis, traduction anglais, français et arabe, et mode sombre.',
+      ar: 'طوّرت تطبيق React Native: اختيار المكوّنات حسب الفئات مع أيقونات، واكتشاف الوصفات انطلاقاً من المكوّنات المختارة، ودعم الإنجليزية والفرنسية والعربية، والوضع الداكن.',
     },
     stack: ['React Native', 'TypeScript', 'Android', 'iOS'],
-    status: { en: 'Open source', fr: 'Open source', ar: 'مفتوح المصدر' },
-    links: [{ label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/cookingapp' }],
+    status: { en: 'Live on Google Play as cookAI · Open source', fr: 'Disponible sur Google Play sous le nom cookAI · Open source', ar: 'متوفر على Google Play باسم cookAI · مفتوح المصدر' },
+    images: [
+      { src: '/projects/cookinapp-ingredients.webp', width: 540, height: 1212, alt: { en: 'CookinApp on Android: choosing ingredients by category, with English, French and Arabic', fr: 'CookinApp sur Android : choix des ingrédients par catégorie, en anglais, français et arabe', ar: 'CookinApp على أندرويد: اختيار المكوّنات حسب الفئة، بالإنجليزية والفرنسية والعربية' } },
+    ],
+    links: [
+      { label: { en: 'Google Play', fr: 'Google Play', ar: 'Google Play' }, href: 'https://play.google.com/store/apps/details?id=com.cookingApp', kind: 'site' },
+      { label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/cookingapp' },
+    ],
   },
   {
     title: 'WZR Quiz',
@@ -366,6 +379,10 @@ export const projects: Project[] = [
       ar: 'طوّرت تطبيق React Native: شبكة الفئات، والتحقق من الإجابات مع صور تفاعل عشوائية، وشاشة النتيجة، وحفظ التقدّم على الجهاز باستخدام SQLite لمتابعة الاختبار من حيث توقف المستخدم.',
     },
     stack: ['React Native', 'JavaScript', 'SQLite', 'Android', 'iOS'],
+    images: [
+      { src: '/projects/wzrquiz-categories.webp', width: 540, height: 1141, alt: { en: 'WZR Quiz on Android: the six quiz categories', fr: 'WZR Quiz sur Android : les six catégories de quiz', ar: 'WZR Quiz على أندرويد: فئات الأسئلة الست' } },
+      { src: '/projects/wzrquiz-question.webp', width: 540, height: 1141, alt: { en: 'WZR Quiz on Android: a sports question with four answers', fr: 'WZR Quiz sur Android : une question de sport avec quatre réponses', ar: 'WZR Quiz على أندرويد: سؤال رياضي بأربع إجابات' } },
+    ],
     status: { en: 'Open source', fr: 'Open source', ar: 'مفتوح المصدر' },
     links: [{ label: { en: 'View on GitHub', fr: 'Voir sur GitHub', ar: 'عرض على GitHub' }, href: 'https://github.com/hamzakhalem/quiz-app' }],
   },
@@ -483,6 +500,10 @@ export const ui = {
   status: u('Status', 'Statut', 'الحالة'),
   proprietary: u('Proprietary — details on request', 'Propriétaire — détails sur demande', 'مشروع خاص — التفاصيل عند الطلب'),
   featured: u('Featured', 'À la une', 'مميز'),
+  viewScreenshots: u('View screenshots', 'Voir les captures', 'عرض لقطات الشاشة'),
+  close: u('Close', 'Fermer', 'إغلاق'),
+  previous: u('Previous', 'Précédent', 'السابق'),
+  next: u('Next', 'Suivant', 'التالي'),
   artSoftware: u('SYSTEMS / ENGINEERING', 'SYSTÈMES / INGÉNIERIE', 'الأنظمة / الهندسة'),
   artAi: u('INTELLIGENCE / AI', 'INTELLIGENCE / IA', 'الذكاء / AI'),
   artLms: u('EDTECH / LMS', 'EDTECH / LMS', 'تقنيات التعليم / LMS'),
